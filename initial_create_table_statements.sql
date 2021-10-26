@@ -50,3 +50,50 @@ CREATE TABLE FastestLap (
         ON DELETE CASCADE
         ON UPDATE CASCADE 
 )
+CREATE TABLE Constructor (
+    ConstructorName CHAR(8),
+    Position INTEGER,
+    Points INTEGER,
+    PRIMARY KEY(ConstructorName)
+)
+
+CREATE TABLE Engine (
+    ModelLine CHAR(8),
+    Manufacturer CHAR(10),
+    PRIMARY KEY(ModelLine, Manufacturer)
+)
+
+CREATE TABLE Chassis (
+    ModelLine CHAR(8),
+    Manufacturer CHAR(10),
+    PRIMARY KEY(ModelLine, Manufacturer)
+)
+
+CREATE TABLE ChassisCar(
+    ModelLine CHAR(8),
+    Manufacturer CHAR(10),
+    CarNumber INTEGER,
+    DriverNumber INTEGER,
+    PRIMARY KEY(ModelLine, Manufacturer, CarNumber, DriverNumber)
+    FOREIGN KEY(ModelLine, Manufacturer)
+        REFERENCES Chassis
+        ON DELETE CASCADE
+    FOREIGN KEY(CarNumber, DriverNumber)
+        REFERENCES Car
+        ON DELETE CASCADE
+)
+
+CREATE TABLE EngineCar(
+    ModelLine CHAR(8),
+    Manufacturer CHAR(10),
+    CarNumber INTEGER,
+    DriverNumber INTEGER,
+    PRIMARY KEY(ModelLine, Manufacturer, CarNumber, DriverNumber)
+    FOREIGN KEY(ModelLine, Manufacturer)
+        REFERENCES Engine
+  ON DELETE CASCADE
+    FOREIGN KEY(CarNumber, DriverNumber)
+        REFERENCES Car
+        ON DELETE CASCADE
+)
+
