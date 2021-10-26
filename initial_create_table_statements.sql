@@ -97,3 +97,93 @@ CREATE TABLE EngineCar(
         ON DELETE CASCADE
 )
 
+
+CREATE TABLE ChassisConsDesigns(
+    ModelLine CHAR(8),
+    Manufacturer CHAR(10),
+    ConstructorName CHAR(8),
+    PRIMARY KEY(ModelLine, Manufacturer, ConstructorName),
+    FOREIGN KEY (ModelLine, Manufacturer)
+        REFERENCES Chassis
+        ON DELETE CASCADE,
+    FOREIGN KEY (ConstructorName)
+        REFERENCES Constructor
+        ON DELETE CASCADE
+)
+
+
+CREATE TABLE EngineConsDesigns(
+    ModelLine CHAR(8),
+    Manufacturer CHAR(10),
+    ConstructorName CHAR(8),
+    PRIMARY KEY(ModelLine, Manufacturer, ConstructorName),
+    FOREIGN KEY(ModelLine, Manufacturer)
+        REFERENCES Engine
+        ON DELETE CASCADE,
+    FOREIGN KEY (ConstructorName)
+        REFERENCES Constructor
+        ON DELETE CASCADE
+)
+
+CREATE TABLE ConstructorCreatesCar (
+    ConstructorName CHAR(8),
+    CarNumber INTEGER,
+    DriverNumber INTEGER,
+    PRIMARY KEY(ConstructorName, CarNumber, DriverNumber)
+    FOREIGN KEY(ConstructorName)
+        REFERENCES Constructor
+        ON DELETE CASCADE
+    FOREIGN KEY(CarNumber, DriverNumber)
+        REFERENCES Car
+        ON DELETE CASCADE
+)
+
+CREATE TABLE Driver(
+    DriverNumber INTEGER,
+    DriverName CHAR(10),
+    DriverAge INTEGER,
+    DriverPoints FLOAT,
+    ConstructorName CHAR(8) NOT NULL
+    PRIMARY KEY(DriverNumber),
+    FOREIGN KEY (ConstructorName)
+        REFERENCES Constructor
+        ON UPDATE CASCADE
+)
+
+
+CREATE TABLE Car(
+    CarNumber INTEGER,
+    CarName CHAR(8),
+    DriverNumber INTEGER
+    PRIMARY KEY(CarNumber, DriverNumber)
+    FOREIGN KEY (DriverNumber)
+        REFERENCES Driver
+        ON DELETE CASCADE
+)
+
+CREATE TABLE DriverRacesInCircuit (
+    DriverNumber INTEGER,
+    CircuitName CHAR(75),
+    PRIMARY KEY(DriverNumber, CircuitName),
+    FOREIGN KEY(DriverNumber)
+        REFERENCES Driver
+        ON DELETE CASCADE
+    FOREIGN KEY(CircuitName)
+        REFERENCES Circuit
+        ON DELETE CASCADE
+)
+
+
+CREATE TABLE DrivePlacesInRace(
+    DriverNumber INTEGER,
+    RaceName CHAR(75),
+    Rank INTEGER,
+    PRIMARY KEY(DriverNumber, RaceName)
+    FOREIGN KEY(RaceName)
+        REFERENCES Race
+        ON DELETE CASCADE
+    FOREIGN KEY(DriverNumber)
+        REFERENCES Driver
+        ON DELETE CASCADE
+)
+
