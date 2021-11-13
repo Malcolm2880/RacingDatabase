@@ -1,31 +1,48 @@
-CREATE TABLE ConstructorCreatesCar
+CREATE TABLE Constructor
 (
     ConstructorName CHAR(8),
-    CarNumber       INTEGER,
+    Position        INTEGER,
+    Points          INTEGER,
+    PRIMARY KEY (ConstructorName)
+);
+
+CREATE TABLE Engine
+(
+    ModelLine    CHAR(8),
+    Manufacturer CHAR(10),
+    PRIMARY KEY (ModelLine, Manufacturer)
+);
+
+CREATE TABLE Chassis
+(
+    ModelLine    CHAR(8),
+    Manufacturer CHAR(10),
+    PRIMARY KEY (ModelLine, Manufacturer)
+);
+
+CREATE TABLE Driver
+(
     DriverNumber    INTEGER,
-    PRIMARY KEY (ConstructorName, CarNumber, DriverNumber),
+    DriverName      CHAR(10),
+    DriverAge       INTEGER,
+    DriverPoints    FLOAT,
+    ConstructorName CHAR(8) NOT NULL,
+    PRIMARY KEY (DriverNumber),
     FOREIGN KEY (ConstructorName)
         REFERENCES Constructor (ConstructorName)
-            ON DELETE CASCADE,
-        FOREIGN KEY (CarNumber,DriverNumber)
-        REFERENCES Car(CarNumber, DriverNumber)
-        ON DELETE CASCADE
-)
+    -- ON UPDATE CASCADE
+);
 
-CREATE TABLE EngineCar
+CREATE TABLE Car
 (
-    ModelLine    CHAR(18),
-    Manufacturer CHAR(20),
     CarNumber    INTEGER,
+    CarName      CHAR(8),
     DriverNumber INTEGER,
-    PRIMARY KEY (ModelLine, Manufacturer, CarNumber, DriverNumber),
-    FOREIGN KEY (ModelLine, Manufacturer)
-        REFERENCES Engine (ModelLine, Manufacturer)
-            ON DELETE CASCADE,
-        FOREIGN KEY (CarNumber, DriverNumber)
-        REFERENCES Car(CarNumber, DriverNumber)
-        ON DELETE CASCADE
-)
+    PRIMARY KEY (CarNumber, DriverNumber),
+    FOREIGN KEY (DriverNumber)
+        REFERENCES Driver (DriverNumber)
+            ON DELETE CASCADE
+);
 
 CREATE TABLE ChassisConsDesigns
 (
@@ -36,10 +53,11 @@ CREATE TABLE ChassisConsDesigns
     FOREIGN KEY (ModelLine, Manufacturer)
         REFERENCES Chassis (ModelLine, Manufacturer)
             ON DELETE CASCADE,
-        FOREIGN KEY (ConstructorName)
+    FOREIGN KEY (ConstructorName)
         REFERENCES Constructor (ConstructorName)
-        ON DELETE CASCADE
-)
+            ON DELETE CASCADE
+);
+
 CREATE TABLE EngineConsDesigns
 (
     ModelLine       CHAR(18),
@@ -52,7 +70,141 @@ CREATE TABLE EngineConsDesigns
     FOREIGN KEY (ConstructorName)
         REFERENCES Constructor (ConstructorName)
             ON DELETE CASCADE
-)
+);
+
+CREATE TABLE CircuitLocation
+(
+    City    CHAR(30),
+    Country CHAR(30),
+    PRIMARY KEY (City)
+);
+
+CREATE TABLE Circuit
+(
+    CircuitName CHAR(75),
+    Length      INTEGER,
+    City        CHAR(30) NOT NULL,
+    PRIMARY KEY (CircuitName),
+    FOREIGN KEY (City)
+        REFERENCES CircuitLocation (City)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE RaceDate
+(
+    StartDate DATE,
+    EndDate   DATE,
+    PRIMARY KEY (EndDate)
+);
+
+CREATE TABLE Race
+(
+    RaceName               CHAR(75),
+    Laps                   INTEGER,
+    EndDate                DATE,
+    FastestLapAverageSpeed FLOAT    NOT NULL,
+    CircuitName            CHAR(75) NOT NULL,
+    PRIMARY KEY (RaceName),
+    FOREIGN KEY (EndDate)
+        REFERENCES RaceDate (EndDate),
+    /*FOREIGN KEY (FastestLapAverageSpeed, RaceName)
+        REFERENCES FastestLap (AverageSpeed, RaceName)
+            ON DELETE CASCADE,*/
+    FOREIGN KEY (CircuitName)
+        REFERENCES Circuit (CircuitName)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE FastestLap
+(
+    AverageSpeed FLOAT,
+    LapTime      TIMESTAMP,
+    RaceName     CHAR(75) NOT NULL,
+    DriverNumber INTEGER  NOT NULL,
+    PRIMARY KEY (AverageSpeed, RaceName),
+    FOREIGN KEY (DriverNumber)
+        REFERENCES Driver (DriverNumber)
+            ON DELETE CASCADE
+                -- ON UPDATE CASCADE
+    /*FOREIGN KEY (RaceName)
+        REFERENCES Race (RaceName)
+            ON DELETE CASCADE
+                --ON UPDATE CASCADE*/
+);
+
+-- Race<-> Fastestlap circular dependency, fix below
+-- https://stackoverflow.com/questions/18832586/creating-tables-with-circular-reference
+ALTER TABLE Race
+    ADD CONSTRAINT FK_LAP
+        FOREIGN KEY (FastestLapAverageSpeed, RaceName)
+            REFERENCES FastestLap (AverageSpeed, RaceName)
+                ON DELETE CASCADE
+                DEFERRABLE;
+
+ALTER TABLE FastestLap
+    ADD CONSTRAINT FK_RACE
+        FOREIGN KEY (RaceName)
+            REFERENCES Race (RaceName)
+                ON DELETE CASCADE
+                DEFERRABLE;
+
+CREATE TABLE ChassisCar
+(
+    ModelLine    CHAR(8),
+    Manufacturer CHAR(10),
+    CarNumber    INTEGER,
+    DriverNumber INTEGER,
+    PRIMARY KEY (ModelLine, Manufacturer, CarNumber, DriverNumber),
+    FOREIGN KEY (ModelLine, Manufacturer)
+        REFERENCES Chassis (ModelLine, Manufacturer)
+            ON DELETE CASCADE,
+    FOREIGN KEY (CarNumber, DriverNumber)
+        REFERENCES Car (CarNumber, DriverNumber)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE EngineCar
+(
+    ModelLine    CHAR(18),
+    Manufacturer CHAR(20),
+    CarNumber    INTEGER,
+    DriverNumber INTEGER,
+    PRIMARY KEY (ModelLine, Manufacturer, CarNumber, DriverNumber),
+    FOREIGN KEY (ModelLine, Manufacturer)
+        REFERENCES Engine (ModelLine, Manufacturer)
+            ON DELETE CASCADE,
+    FOREIGN KEY (CarNumber, DriverNumber)
+        REFERENCES Car (CarNumber, DriverNumber)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE ConstructorCreatesCar
+(
+    ConstructorName CHAR(8),
+    CarNumber       INTEGER,
+    DriverNumber    INTEGER,
+    PRIMARY KEY (ConstructorName, CarNumber, DriverNumber),
+    FOREIGN KEY (ConstructorName)
+        REFERENCES Constructor (ConstructorName)
+            ON DELETE CASCADE,
+    FOREIGN KEY (CarNumber, DriverNumber)
+        REFERENCES Car (CarNumber, DriverNumber)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE DriverRacesInCircuit
+(
+    DriverNumber INTEGER,
+    CircuitName  CHAR(75),
+    PRIMARY KEY (DriverNumber, CircuitName),
+    FOREIGN KEY (DriverNumber)
+        REFERENCES Driver
+            ON DELETE CASCADE,
+    FOREIGN KEY (CircuitName)
+        REFERENCES Circuit (CircuitName)
+            ON DELETE CASCADE
+);
+
 
 CREATE TABLE DrivePlacesInRace
 (
@@ -63,11 +215,14 @@ CREATE TABLE DrivePlacesInRace
     FOREIGN KEY (RaceName)
         REFERENCES Race (RaceName)
             ON DELETE CASCADE,
-        FOREIGN KEY (DriverNumber)
+    FOREIGN KEY (DriverNumber)
         REFERENCES Driver(DriverNumber)
-        ON DELETE CASCADE
-)
+            ON DELETE CASCADE
+);
 
+ALTER SESSION SET CONSTRAINTS = DEFERRED;
+
+/*
 INSERT INTO ConstructorCreatesCar
 VALUES ('Mercedes', 2, 1);
 INSERT INTO ConstructorCreatesCar
@@ -113,14 +268,14 @@ VALUES ('Test', 'Bankruptcy Racing', 'AlpineRenault');
 INSERT INTO EngineConsDesigns
 VALUES ('Weapons', 'Winchester', 'McLarenMercedes');
 
-INSERT INTO DriverRacesInRace
+INSERT INTO DrivePlacesInRace
 VALUES (2, 'Bahrain Grand Prix', 9);
-INSERT INTO DriverRacesInRace
+INSERT INTO DrivePlacesInRace
 VALUES (4, 'Emilia Romagna Grand Prix', 4);
-INSERT INTO DriverRacesInRace
+INSERT INTO DrivePlacesInRace
 VALUES (55, 'Portugese Grand Prix', 5);
-INSERT INTO DriverRacesInRace
+INSERT INTO DrivePlacesInRace
 VALUES (69, 'Spanish Grand Prix', 1);
-INSERT INTO DriverRacesInRace
-VALUES (42, 'Monaco Grand Prix', 99);
+INSERT INTO DrivePlacesInRace
+VALUES (42, 'Monaco Grand Prix', 99);*/
 
