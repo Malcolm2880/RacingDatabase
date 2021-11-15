@@ -7,53 +7,51 @@ import java.awt.event.ActionListener;
 
 // Represents a home screen that contains the
 // main menu and buttons to the other screens.
-public class HomeScreen extends JFrame implements ActionListener {
-
-    private static final Integer WIDTH = 750;
-    private static final Integer HEIGHT = 250;
+public class HomeScreen extends Screen {
 
     private JButton racesButton;
     private JButton driversButton;
     private JButton constructorsButton;
     private JButton fastestLapsButton;
-    private GridBagConstraints constraints;
 
     public HomeScreen() {
-        super("2021 F1 World Championship ");
-
-        constraints = new GridBagConstraints();
-
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setLayout(new GridBagLayout());
+        super("2021 F1 World Championship");
         setButton(racesButton,"Races", "showRaces", 0,0);
         setButton(driversButton,"Drivers", "showDrivers", 0,1);
         setButton(constructorsButton,"Constructors", "showConstructors", 0,2);
         setButton(fastestLapsButton, "Fastest Lap Awards", "showFastestLaps", 0, 3);
-
-        pack();
-        setVisible(true);
     }
 
-    private void setButton(JButton button, String buttonName, String actionCommand, Integer xCoord, Integer yCoord) {
-        button = new JButton(buttonName);
-        button.setActionCommand(actionCommand);
-        button.addActionListener(this);
-        constraints.gridx = xCoord;
-        constraints.gridy = yCoord;
-
+    @Override
+     protected void setConstraints() {
         // button size
         constraints.ipadx = 300;
         constraints.ipady = 100;
 
         // vertical spacing
         constraints.insets = new Insets(25,0,0,0);
-        constraints.fill = GridBagConstraints.HORIZONTAL;
 
-        add(button, constraints);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "showRaces":
+                RacesScreen racesScreen = new RacesScreen();
+                displayScreen(racesScreen);
+                break;
+            case "showDrivers":
+                // TODO: Add driver screen
+                break;
+            case "showConstructors":
+                // TODO: Add constructor screen
+                break;
+            case "showFastestLaps":
+                // TODO: Add fastest lap screen
+                break;
+        }
 
     }
 }
