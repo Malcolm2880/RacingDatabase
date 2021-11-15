@@ -1,6 +1,6 @@
 CREATE TABLE Constructor
 (
-    ConstructorName CHAR(8),
+    ConstructorName CHAR(80),
     Position        INTEGER,
     Points          INTEGER,
     PRIMARY KEY (ConstructorName)
@@ -48,7 +48,7 @@ CREATE TABLE ChassisConsDesigns
 (
     ModelLine       CHAR(18),
     Manufacturer    CHAR(20),
-    ConstructorName CHAR(8),
+    ConstructorName CHAR(80),
     PRIMARY KEY (ModelLine, Manufacturer, ConstructorName),
     FOREIGN KEY (ModelLine, Manufacturer)
         REFERENCES Chassis (ModelLine, Manufacturer)
@@ -180,7 +180,7 @@ CREATE TABLE EngineCar
 
 CREATE TABLE ConstructorCreatesCar
 (
-    ConstructorName CHAR(8),
+    ConstructorName CHAR(80),
     CarNumber       INTEGER,
     DriverNumber    INTEGER,
     PRIMARY KEY (ConstructorName, CarNumber, DriverNumber),
