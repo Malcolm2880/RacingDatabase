@@ -1,5 +1,7 @@
 package main.ui;
 
+import main.database.DatabaseConnectionHandler;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -7,14 +9,14 @@ import java.awt.event.ActionListener;
 // Parent class for the screens(frames) of the project.
 public abstract class Screen extends JFrame implements ActionListener {
     protected GridBagConstraints constraints;
+    protected DatabaseConnectionHandler dbHandler;
 
     public Screen(String title) {
         super(title);
         constraints = new GridBagConstraints();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new GridBagLayout());
-        setConstraints();
-        setVisible(true);
+        dbHandler = new DatabaseConnectionHandler();
     }
 
     protected void displayScreen(JFrame screen) {
@@ -31,5 +33,4 @@ public abstract class Screen extends JFrame implements ActionListener {
         add(button, constraints);
     }
 
-    protected abstract void setConstraints();
 }

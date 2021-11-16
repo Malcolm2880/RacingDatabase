@@ -13,16 +13,19 @@ public class HomeScreen extends Screen {
     private JButton driversButton;
     private JButton constructorsButton;
     private JButton fastestLapsButton;
+    private JButton overviewButton;
 
     public HomeScreen() {
         super("2021 F1 World Championship");
-        setButton(racesButton,"Races", "showRaces", 0,0);
-        setButton(driversButton,"Drivers", "showDrivers", 0,1);
-        setButton(constructorsButton,"Constructors", "showConstructors", 0,2);
+        setConstraints();
+        setButton(racesButton,"Race Results", "showRaces", 0,0);
+        setButton(driversButton,"Driver Standings", "showDrivers", 0,1);
+        setButton(constructorsButton,"Constructor Standings", "showConstructors", 0,2);
         setButton(fastestLapsButton, "Fastest Lap Awards", "showFastestLaps", 0, 3);
+        setButton(overviewButton, "Overview of the Season", "showOverview", 0, 4);
+        setVisible(true);
     }
 
-    @Override
      protected void setConstraints() {
         // button size
         constraints.ipadx = 300;
@@ -51,6 +54,8 @@ public class HomeScreen extends Screen {
             case "showFastestLaps":
                 // TODO: Add fastest lap screen
                 break;
+            case "showOverview":
+                // TODO: Add overview screen
         }
 
     }
