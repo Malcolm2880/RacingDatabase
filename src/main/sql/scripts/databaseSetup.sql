@@ -6,20 +6,6 @@ CREATE TABLE Constructor
     PRIMARY KEY (ConstructorName)
 );
 
-CREATE TABLE Engine
-(
-    ModelLine    CHAR(8),
-    Manufacturer CHAR(10),
-    PRIMARY KEY (ModelLine, Manufacturer)
-);
-
-CREATE TABLE Chassis
-(
-    ModelLine    CHAR(8),
-    Manufacturer CHAR(10),
-    PRIMARY KEY (ModelLine, Manufacturer)
-);
-
 CREATE TABLE Driver
 (
     DriverNumber    INTEGER,
@@ -41,34 +27,6 @@ CREATE TABLE Car
     PRIMARY KEY (CarNumber, DriverNumber),
     FOREIGN KEY (DriverNumber)
         REFERENCES Driver (DriverNumber)
-            ON DELETE CASCADE
-);
-
-CREATE TABLE ChassisConsDesigns
-(
-    ModelLine       CHAR(18),
-    Manufacturer    CHAR(20),
-    ConstructorName CHAR(80),
-    PRIMARY KEY (ModelLine, Manufacturer, ConstructorName),
-    FOREIGN KEY (ModelLine, Manufacturer)
-        REFERENCES Chassis (ModelLine, Manufacturer)
-            ON DELETE CASCADE,
-    FOREIGN KEY (ConstructorName)
-        REFERENCES Constructor (ConstructorName)
-            ON DELETE CASCADE
-);
-
-CREATE TABLE EngineConsDesigns
-(
-    ModelLine       CHAR(18),
-    Manufacturer    CHAR(20),
-    ConstructorName CHAR(80),
-    PRIMARY KEY (ModelLine, Manufacturer, ConstructorName),
-    FOREIGN KEY (ModelLine, Manufacturer)
-        REFERENCES Engine (ModelLine, Manufacturer)
-            ON DELETE CASCADE,
-    FOREIGN KEY (ConstructorName)
-        REFERENCES Constructor (ConstructorName)
             ON DELETE CASCADE
 );
 
@@ -147,36 +105,6 @@ ALTER TABLE FastestLap
             REFERENCES Race (RaceName)
                 ON DELETE CASCADE
                 DEFERRABLE;
-
-CREATE TABLE ChassisCar
-(
-    ModelLine    CHAR(8),
-    Manufacturer CHAR(10),
-    CarNumber    INTEGER,
-    DriverNumber INTEGER,
-    PRIMARY KEY (ModelLine, Manufacturer, CarNumber, DriverNumber),
-    FOREIGN KEY (ModelLine, Manufacturer)
-        REFERENCES Chassis (ModelLine, Manufacturer)
-            ON DELETE CASCADE,
-    FOREIGN KEY (CarNumber, DriverNumber)
-        REFERENCES Car (CarNumber, DriverNumber)
-            ON DELETE CASCADE
-);
-
-CREATE TABLE EngineCar
-(
-    ModelLine    CHAR(18),
-    Manufacturer CHAR(20),
-    CarNumber    INTEGER,
-    DriverNumber INTEGER,
-    PRIMARY KEY (ModelLine, Manufacturer, CarNumber, DriverNumber),
-    FOREIGN KEY (ModelLine, Manufacturer)
-        REFERENCES Engine (ModelLine, Manufacturer)
-            ON DELETE CASCADE,
-    FOREIGN KEY (CarNumber, DriverNumber)
-        REFERENCES Car (CarNumber, DriverNumber)
-            ON DELETE CASCADE
-);
 
 CREATE TABLE ConstructorCreatesCar
 (
