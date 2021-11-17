@@ -2,7 +2,7 @@ CREATE TABLE Constructor
 (
     ConstructorName CHAR(80),
     Position        INTEGER,
-    Points          INTEGER,
+    Points          FLOAT,
     PRIMARY KEY (ConstructorName)
 );
 
@@ -22,7 +22,7 @@ CREATE TABLE Driver
 CREATE TABLE Car
 (
     CarNumber    INTEGER,
-    CarName      CHAR(8),
+    CarName      CHAR(80),
     DriverNumber INTEGER,
     PRIMARY KEY (CarNumber, DriverNumber),
     FOREIGN KEY (DriverNumber)
@@ -150,60 +150,26 @@ CREATE TABLE DrivePlacesInRace
 
 ALTER SESSION SET CONSTRAINTS = DEFERRED;
 
-/*
-INSERT INTO ConstructorCreatesCar
-VALUES ('Mercedes', 2, 1);
-INSERT INTO ConstructorCreatesCar
-VALUES ('Ferrari', '4', '2');
-INSERT INTO ConstructorCreatesCar
-VALUES ('RedBullRacingHonda', '55', '3');
-INSERT INTO ConstructorCreatesCar
-VALUES ('AlpineRenault', '69', '4');
-INSERT INTO ConstructorCreatesCar
-VALUES ('McLarenMercedes', '42', '5');
-
-INSERT INTO EngineCar
-VALUES ('Spirits', 'Ghost Productions', 1, 2);
-INSERT INTO EngineCar
-VALUES ('Computational', 'Queen Manufacturing', 2, 4);
-INSERT INTO EngineCar
-VALUES ('Chad', 'Chad', 3, 55);
-INSERT INTO EngineCar
-VALUES ('Test', 'Bankruptcy Racing', 4, 69);
-INSERT INTO EngineCar
-VALUES ('Weapons', 'Winchester', 5, 42);
 
 
-INSERT INTO ChassisConsDesigns
-VALUES ('Spirits', 'Ghost Productions', 'Mercedes');
-INSERT INTO ChassisConsDesigns
-VALUES ('Computational', 'Queen Manufacturing', 'Ferrari');
-INSERT INTO ChassisConsDesigns
-VALUES ('Chad', 'Chad', 'RedBullRacingHonda');
-INSERT INTO ChassisConsDesigns
-VALUES ('Test', 'Bankruptcy Racing', 'AlpineRenault');
-INSERT INTO ChassisConsDesigns
-VALUES ('Weapons', 'Winchester', 'McLarenMercedes');
+/**
+  Initial data is based on the first race of the season for Mercedes
+ */
 
-INSERT INTO EngineConsDesigns
-VALUES ('Spirits', 'Ghost Productions', 'Mercedes');
-INSERT INTO EngineConsDesigns
-VALUES ('Computational', 'Queen Manufacturing', 'Ferrari');
-INSERT INTO EngineConsDesigns
-VALUES ('Chad', 'Chad', 'RedBullRacingHonda');
-INSERT INTO EngineConsDesigns
-VALUES ('Test', 'Bankruptcy Racing', 'AlpineRenault');
-INSERT INTO EngineConsDesigns
-VALUES ('Weapons', 'Winchester', 'McLarenMercedes');
-
-INSERT INTO DrivePlacesInRace
-VALUES (2, 'Bahrain Grand Prix', 9);
-INSERT INTO DrivePlacesInRace
-VALUES (4, 'Emilia Romagna Grand Prix', 4);
-INSERT INTO DrivePlacesInRace
-VALUES (55, 'Portugese Grand Prix', 5);
-INSERT INTO DrivePlacesInRace
-VALUES (69, 'Spanish Grand Prix', 1);
-INSERT INTO DrivePlacesInRace
-VALUES (42, 'Monaco Grand Prix', 99);*/
-
+INSERT INTO Constructor VALUES ('Mercedes', 1, 41.0);
+INSERT INTO Driver VALUES (44, 'Lewis Hamilton', 36, 25.0, 'Mercedes');
+INSERT INTO Driver VALUES (77, 'Valtteri Bottas', 32, 16.0, 'Mercedes');
+INSERT INTO Car VALUES (44, 'Mercedes-AMG F1 W12 E Performance', 44);
+INSERT INTO Car VALUES (77, 'Mercedes-AMG F1 W12 E Performance', 44);
+INSERT INTO Circuit VALUES ('Bahrain International Circuit', 5412, 'Sakhir');
+INSERT INTO CircuitLocation VALUES ('Sakhir', 'Bahrain');
+INSERT INTO RaceDate VALUES ('2021-03-26', '2021-03-28');
+INSERT INTO ConstructorCreatesCar VALUES ('Mercedes', 2, 1);
+INSERT INTO Race VALUES ('Bahrain Grand Prix', 56, '2021-03-28', 211.566, 'Bahrain International Circuit');
+INSERT INTO FastestLap VALUES (211.566, 1:32:090, 'Bahrain Grand Prix', 77);
+INSERT INTO ConstructorCreatesCar VALUES ('Mercedes', 77, 77);
+INSERT INTO ConstructorCreatesCar VALUES ('Mercedes', 44, 44);
+INSERT INTO DriverRacesInCircuit VALUES (44, 'Bahrain International Circuit');
+INSERT INTO DriverRacesInCircuit VALUES (77, 'Bahrain International Circuit');
+INSERT INTO DrivePlacesInRace VALUES (44, 'Bahrain Grand Prix', 1);
+INSERT INTO DrivePlacesInRace VALUES (77, 'Bahrain Grand Prix', 2);
