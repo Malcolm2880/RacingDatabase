@@ -17,6 +17,15 @@ public abstract class Screen extends JFrame implements ActionListener {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new GridBagLayout());
         dbHandler = new DatabaseConnectionHandler();
+
+        // to avoid multiple active sessions
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                dbHandler.close();
+                System.exit(0);
+            }
+        });
     }
 
     protected void displayScreen(JFrame screen) {

@@ -1,39 +1,52 @@
 package main.ui;
 
+import main.model.Race;
+
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Date;
+import java.util.List;
 
 public class RacesScreen extends Screen {
-    private static final String[] columnNames = {"Grand Prix",
-                                                 "Date", "Winner (Driver)", "Winner (Constructor)", "Laps"};
-    Object[][] data = {
-            {"Kathy", "Smith",
-                    "Snowboarding", new Integer(5), new Boolean(false)},
-            {"John", "Doe",
-                    "Rowing", new Integer(3), new Boolean(true)},
-            {"Sue", "Black",
-                    "Knitting", new Integer(2), new Boolean(false)},
-            {"Jane", "White",
-                    "Speed reading", new Integer(20), new Boolean(true)},
-            {"Joe", "Brown",
-                    "Pool", new Integer(10), new Boolean(false)}
-    };
+    private static final String[] columnNames = {"Grand Prix", "Laps", "Date", "Fastest Lap Average Speed",
+                                                 "Circuit Name", "Winner (Driver)", "Winner (Constructor)"};
+    Object[][] data = {};
 
     private TablePanel raceResultsTable;
     private JButton addRaceButton;
 
     public RacesScreen() {
         super("Race Results");
+        List<Race> raceResults = dbHandler.getRaceResults();
         setLayout(new BorderLayout());
-        setResultsTable();
+        setResultsTable(raceResults);
         setAddRaceButton();
         HeaderPanel panel = new HeaderPanel();
         add(panel, BorderLayout.PAGE_START);
     }
 
+    private Object[][] getRaceDataForTable(List<Race> raceResults) {
+        Object[][] data = new Object[raceResults.size()][];
 
-    private void setResultsTable() {
+        int i = 0;
+        for (Race next : raceResults) {
+            Object[] obj = new Object[7];
+            obj[0] = next.getName();
+            obj[1] = next.getNumberOfLaps();
+            obj[2] = next.getDate();
+            obj[3] = next.getFastestLapAverageSpeed();
+            obj[4] = next.getCircuitName();
+            obj[5] = next.getWinnerDriver();
+            obj[6] = next.getWinnerConstructor();
+            data[i++] = obj;
+        }
+        return data;
+    };
+
+    private void setResultsTable(List<Race> raceResults) {
+        this.data = getRaceDataForTable(raceResults);
         raceResultsTable = new TablePanel(data, columnNames);
         add(raceResultsTable, BorderLayout.CENTER);
     }

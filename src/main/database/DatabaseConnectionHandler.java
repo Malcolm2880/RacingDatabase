@@ -1,10 +1,14 @@
 package main.database;
 
+import main.model.Race;
 import main.util.PrintablePreparedStatement;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class handles all database related transactions
@@ -18,6 +22,7 @@ public class DatabaseConnectionHandler {
     public DatabaseConnectionHandler() {
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+            login("ora_kbarutcu", "a25056623");
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
@@ -48,6 +53,31 @@ public class DatabaseConnectionHandler {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             return false;
         }
+    }
+
+    public List<Race> getRaceResults() {
+        List<Race> races = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM RACE, DRIVER WHERE WINNERDRIVERNUMBER = DRIVERNUMBER";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                Race model = new Race(rs.getString("RaceName"), rs.getInt("Laps"),
+                                      rs.getDate("EndDate"), rs.getFloat("FastestLapAverageSpeed"),
+                                      rs.getString("CircuitName"), rs.getString("DriverName"),
+                                      rs.getString("ConstructorName"));
+                races.add(model);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return races;
     }
 
     private void rollbackConnection() {

@@ -62,6 +62,7 @@ CREATE TABLE Race
     EndDate                DATE,
     FastestLapAverageSpeed FLOAT    NOT NULL,
     CircuitName            CHAR(75) NOT NULL,
+    WinnerDriverNumber     INTEGER,
     PRIMARY KEY (RaceName),
     FOREIGN KEY (EndDate)
         REFERENCES RaceDate (EndDate),
@@ -70,7 +71,9 @@ CREATE TABLE Race
             ON DELETE CASCADE,*/
     FOREIGN KEY (CircuitName)
         REFERENCES Circuit (CircuitName)
-            ON DELETE CASCADE
+            ON DELETE CASCADE,
+    FOREIGN KEY (WinnerDriverNumber)
+        REFERENCES Driver
 );
 
 CREATE TABLE FastestLap
@@ -165,7 +168,7 @@ INSERT INTO CircuitLocation VALUES ('Sakhir', 'Bahrain');
 INSERT INTO RaceDate VALUES ('2021-03-26', '2021-03-28');
 INSERT INTO Circuit VALUES ('Bahrain International Circuit', 5412, 'Sakhir');
 INSERT INTO FastestLap VALUES (211.566, '01:32:090', 'Bahrain Grand Prix', 77);
-INSERT INTO Race VALUES ('Bahrain Grand Prix', 56, '2021-03-28', 211.566, 'Bahrain International Circuit');
+INSERT INTO Race VALUES ('Bahrain Grand Prix', 56, '2021-03-28', 211.566, 'Bahrain International Circuit', 44);
 INSERT INTO ConstructorCreatesCar VALUES ('Mercedes', 77, 77);
 INSERT INTO ConstructorCreatesCar VALUES ('Mercedes', 44, 44);
 INSERT INTO DriverRacesInCircuit VALUES (44, 'Bahrain International Circuit');
