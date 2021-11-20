@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class RaceTable extends TablePanel{
+public class RaceTablePanel extends TablePanel{
 
-    public RaceTable(Object[][] data, String[] columnNames) {
+    public RaceTablePanel(Object[][] data, String[] columnNames) {
         super(data, columnNames);
     }
 
@@ -15,7 +15,6 @@ public class RaceTable extends TablePanel{
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JTable table = (JTable) e.getSource();
                 int row = table.rowAtPoint(e.getPoint());
                 int col = table.columnAtPoint(e.getPoint());
                 System.out.println(data[row][col]);

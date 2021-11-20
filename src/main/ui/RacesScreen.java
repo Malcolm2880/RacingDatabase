@@ -3,12 +3,8 @@ package main.ui;
 import main.model.Race;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Date;
 import java.util.List;
 
 public class RacesScreen extends Screen {
@@ -48,7 +44,7 @@ public class RacesScreen extends Screen {
 
     private void setResultsTable(List<Race> raceResults) {
         Object[][]data = getRaceDataForTable(raceResults);
-        raceResultsTable = new RaceTable(data, columnNames);
+        raceResultsTable = new RaceTablePanel(data, columnNames);
         add(raceResultsTable, BorderLayout.CENTER);
     }
 
