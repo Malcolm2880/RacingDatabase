@@ -2,11 +2,11 @@ package main.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class TablePanel extends JPanel implements ActionListener {
-    private JTable table;
+
+public abstract class TablePanel extends JPanel {
+    public JTable table;
+    Object[][] data;
 
     public TablePanel(Object[][] data, String[] columnNames) {
         setLayout(new BorderLayout());
@@ -14,16 +14,14 @@ public class TablePanel extends JPanel implements ActionListener {
         table = new JTable(data, columnNames);
         table.setRowHeight(50);
         table.setDefaultEditor(Object.class, null);
+        this.data = data;
 
         add(table.getTableHeader(), BorderLayout.PAGE_START);
         add(table, BorderLayout.CENTER);
+        checkClick();
 
         setVisible(true);
     }
 
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
+    public abstract void checkClick();
 }
