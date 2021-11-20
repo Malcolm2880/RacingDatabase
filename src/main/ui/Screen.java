@@ -16,7 +16,7 @@ public abstract class Screen extends JFrame implements ActionListener {
         constraints = new GridBagConstraints();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new GridBagLayout());
-        dbHandler = new DatabaseConnectionHandler();
+        dbHandler = DatabaseConnectionHandler.getInstance();
 
         // to avoid multiple active sessions
         this.addWindowListener(new java.awt.event.WindowAdapter() {

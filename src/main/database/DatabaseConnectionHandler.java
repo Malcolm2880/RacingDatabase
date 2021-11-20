@@ -17,16 +17,23 @@ public class DatabaseConnectionHandler {
     private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
     private static final String EXCEPTION_TAG = "[EXCEPTION]";
 
+    private static DatabaseConnectionHandler instance;
     private Connection connection = null;
 
-    public DatabaseConnectionHandler() {
+    private DatabaseConnectionHandler() {
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-            //TODO: UPDATE THIS
-            login("placeholder", "placeholder");
+            login("ora_kbarutcu", "a25056623");
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
+    }
+
+    public static DatabaseConnectionHandler getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnectionHandler();
+        }
+        return instance;
     }
 
     public void close() {
