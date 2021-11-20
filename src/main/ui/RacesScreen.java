@@ -8,9 +8,6 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class RacesScreen extends Screen {
-    private static final String[] columnNames = {"Grand Prix", "Laps", "Date", "Fastest Lap Average Speed",
-                                                 "Circuit Name", "Winner (Driver)", "Winner (Constructor)"};
-
     private TablePanel raceResultsTable;
     private JButton addRaceButton;
 
@@ -44,7 +41,7 @@ public class RacesScreen extends Screen {
 
     private void setResultsTable(List<Race> raceResults) {
         Object[][]data = getRaceDataForTable(raceResults);
-        raceResultsTable = new RaceTablePanel(data, columnNames);
+        raceResultsTable = new RaceTablePanel(data);
         add(raceResultsTable, BorderLayout.CENTER);
     }
 
