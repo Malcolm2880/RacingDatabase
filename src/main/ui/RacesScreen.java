@@ -12,7 +12,6 @@ import java.util.List;
 public class RacesScreen extends Screen {
     private static final String[] columnNames = {"Grand Prix", "Laps", "Date", "Fastest Lap Average Speed",
                                                  "Circuit Name", "Winner (Driver)", "Winner (Constructor)"};
-    Object[][] data = {};
 
     private TablePanel raceResultsTable;
     private JButton addRaceButton;
@@ -46,7 +45,7 @@ public class RacesScreen extends Screen {
     };
 
     private void setResultsTable(List<Race> raceResults) {
-        this.data = getRaceDataForTable(raceResults);
+        Object[][] data = getRaceDataForTable(raceResults);
         raceResultsTable = new TablePanel(data, columnNames);
         add(raceResultsTable, BorderLayout.CENTER);
     }

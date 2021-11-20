@@ -22,7 +22,8 @@ public class DatabaseConnectionHandler {
     public DatabaseConnectionHandler() {
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-            login("ora_kbarutcu", "a25056623");
+            //TODO: UPDATE THIS
+            login("placeholder", "placeholder");
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
@@ -59,7 +60,10 @@ public class DatabaseConnectionHandler {
         List<Race> races = new ArrayList<>();
 
         try {
-            String query = "SELECT * FROM RACE, DRIVER WHERE WINNERDRIVERNUMBER = DRIVERNUMBER";
+            String query = "SELECT * " +
+                           "FROM RACE, DRIVER, DRIVEPLACESINRACE " +
+                           "WHERE RACE.RACENAME = DRIVEPLACESINRACE.RACENAME AND DRIVEPLACESINRACE.RANK = 1 " +
+                           "AND DRIVER.DRIVERNUMBER = DRIVEPLACESINRACE.DRIVERNUMBER";
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
             ResultSet rs = ps.executeQuery();
 
