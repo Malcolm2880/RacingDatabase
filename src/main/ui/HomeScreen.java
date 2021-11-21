@@ -49,7 +49,8 @@ public class HomeScreen extends Screen {
                 // TODO: Add driver screen
                 break;
             case "showConstructors":
-                // TODO: Add constructor screen
+                ConstructorScreen cScreen = new ConstructorScreen();
+                displayScreen(cScreen);
                 break;
             case "showFastestLaps":
                 // TODO: Add fastest lap screen

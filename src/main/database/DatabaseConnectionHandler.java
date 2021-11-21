@@ -1,5 +1,6 @@
 package main.database;
 
+import main.model.Constructor;
 import main.model.Race;
 import main.util.PrintablePreparedStatement;
 
@@ -90,6 +91,33 @@ public class DatabaseConnectionHandler {
 
         return races;
     }
+
+    public List<Constructor> getConstructorResults() {
+        List<Constructor> constructors = new ArrayList<>();
+
+        try {
+            String query = "SELECT * " +
+                    "FROM CONSTRUCTOR ";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                Constructor model = new Constructor(rs.getString("ConstructorName"), rs.getInt("Position"), rs.getFloat("Points"));
+
+                constructors.add(model);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return constructors;
+    }
+
+
+
 
     private void rollbackConnection() {
         try  {
