@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class handles all database related transactions
@@ -68,18 +69,24 @@ public class DatabaseConnectionHandler {
         List<Race> races = new ArrayList<>();
 
         try {
-            String query = "SELECT * " +
-                           "FROM RACE, DRIVER, DRIVEPLACESINRACE " +
-                           "WHERE RACE.RACENAME = DRIVEPLACESINRACE.RACENAME AND DRIVEPLACESINRACE.RANK = 1 " +
-                           "AND DRIVER.DRIVERNUMBER = DRIVEPLACESINRACE.DRIVERNUMBER";
+            String query = "SELECT * FROM RACE";
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
+                List<Driver> driverResults = getRaceResult(rs.getString("RaceName"));
+
+                Driver winnerDriver = driverResults.stream()
+                        .filter(driver -> driver.getPosition().equals(1))
+                        .findFirst()
+                        .orElse(null);
+
+                String winnerDriverName = winnerDriver == null ? "" : winnerDriver.getName();
+                String winnerConstructor = winnerDriver == null ? "" : winnerDriver.getConstructorName();
+
                 Race model = new Race(rs.getString("RaceName"), rs.getInt("Laps"),
                                       rs.getDate("EndDate"), rs.getFloat("FastestLapAverageSpeed"),
-                                      rs.getString("CircuitName"), rs.getString("DriverName"),
-                                      rs.getString("ConstructorName"));
+                                      rs.getString("CircuitName"), winnerDriverName, winnerConstructor);
                 races.add(model);
             }
 
@@ -129,7 +136,7 @@ public class DatabaseConnectionHandler {
                             "AND DRIVEPLACESINRACE.DRIVERNUMBER = DRIVER.DRIVERNUMBER " +
                             "ORDER BY DRIVEPLACESINRACE.RANK ASC ";
 
-                    PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
 
