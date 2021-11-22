@@ -17,7 +17,7 @@ public class ConstructorScreen extends Screen {
         List<Constructor> constructorResults = dbHandler.getConstructorResults();
         setLayout(new BorderLayout());
         setResultsTable(constructorResults);
-        HeaderPanel panel = new HeaderPanel();
+        HeaderPanel panel = new HeaderPanel("Constructor Results", true);
         add(panel, BorderLayout.PAGE_START);
     }
 
