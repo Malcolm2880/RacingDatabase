@@ -60,7 +60,7 @@ CREATE TABLE Race
     RaceName               CHAR(75),
     Laps                   INTEGER,
     EndDate                DATE,
-    FastestLapAverageSpeed FLOAT    NOT NULL,
+    FastestLapAverageSpeed FLOAT,
     CircuitName            CHAR(75) NOT NULL,
     PRIMARY KEY (RaceName),
     FOREIGN KEY (EndDate)

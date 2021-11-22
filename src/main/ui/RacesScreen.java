@@ -17,7 +17,7 @@ public class RacesScreen extends Screen {
         setLayout(new BorderLayout());
         setResultsTable(raceResults);
         setAddRaceButton();
-        HeaderPanel panel = new HeaderPanel();
+        HeaderPanel panel = new HeaderPanel("Race Results", true);
         add(panel, BorderLayout.PAGE_START);
     }
 
@@ -40,19 +40,24 @@ public class RacesScreen extends Screen {
     };
 
     private void setResultsTable(List<Race> raceResults) {
-        Object[][]data = getRaceDataForTable(raceResults);
-        raceResultsTable = new RaceTablePanel(data);
+        Object[][] data = getRaceDataForTable(raceResults);
+        raceResultsTable = new RacesTablePanel(data);
         add(raceResultsTable, BorderLayout.CENTER);
     }
 
     private void setAddRaceButton() {
         addRaceButton = new JButton("Add Race");
         addRaceButton.setPreferredSize(new Dimension(60, 100));
+        addRaceButton.setActionCommand("addRace");
+        addRaceButton.addActionListener(this);
         add(addRaceButton, BorderLayout.PAGE_END);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getActionCommand().equals("addRace")) {
+            AddRaceScreen addRaceScreen = new AddRaceScreen();
+            addRaceScreen.setVisible(true);
+        }
     }
 }
