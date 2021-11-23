@@ -7,10 +7,8 @@ import main.util.PrintablePreparedStatement;
 
 import java.sql.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This class handles all database related transactions
@@ -265,11 +263,12 @@ public class DatabaseConnectionHandler {
 
     public void insertRace(String raceName, String practiceDate, String raceDate, String city, String circuitName,
                            Integer numOfLaps, Integer circuitLength, Float fastestLapAverageSpeed, String fastestLapTime,
-                           Integer fastestLapDriverNo) throws ParseException {
+                           String fastestLapDriverName) throws ParseException {
 
         try {
             insertRaceDate(practiceDate, raceDate);
             insertCircuit(circuitName, circuitLength, city);
+            Integer fastestLapDriverNo = getDriverNumber(fastestLapDriverName);
 
             String query = "INSERT INTO RACE VALUES (?,?,?,?,?)";
 
@@ -423,5 +422,43 @@ public class DatabaseConnectionHandler {
         }
 
         return driverNo;
+    }
+
+    public void updateRaceResult(String raceName, String driverName, Integer rank) {
+        try {
+            Integer driverNo = getDriverNumber(driverName);
+
+            String query = "UPDATE DRIVEPLACESINRACE SET RANK = ? WHERE RACENAME = ? AND DRIVERNUMBER = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setInt(1, rank);
+            ps.setString(2, raceName);
+            ps.setInt(3, driverNo);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+    public void deleteResult(String raceName, String driverNameToDelete) {
+        try {
+            Integer driverNo = getDriverNumber(driverNameToDelete);
+            String query = "DELETE FROM DRIVEPLACESINRACE WHERE RACENAME = ? AND DRIVERNUMBER = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setString(1, raceName);
+            ps.setInt(2, driverNo);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
     }
 }

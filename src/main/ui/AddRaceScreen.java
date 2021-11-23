@@ -1,5 +1,7 @@
 package main.ui;
 
+import main.model.Driver;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,8 +30,8 @@ public class AddRaceScreen extends Screen{
     JLabel circuitLengthLabel;
     JTextField circuitLengthField;
 
-    JLabel fastestLapDriverNoLabel;
-    JTextField fastestLapDriverNoField;
+    JLabel fastestLapDriverLabel;
+    JComboBox fastestLapDriverComboBox;
 
     JLabel fastestLapTimeLabel;
     JTextField fastestLapTimeField;
@@ -65,7 +67,7 @@ public class AddRaceScreen extends Screen{
 
         List<String> raceCities = dbHandler.getRaceCities();
         cityComboBox = new JComboBox<>(raceCities.toArray(new String[raceCities.size()]));
-        setCityComboBox(cityComboBox, 0, 7);
+        setComboBox(cityComboBox, 0, 7);
 
 
         circuitNameLabel = new JLabel();
@@ -78,10 +80,11 @@ public class AddRaceScreen extends Screen{
         setLabel(numberOfLapsLabel, "Number of Laps", 0,10);
         setTextField(numberOfLapsField, "Number of Laps", 0, 11);
 
-        fastestLapDriverNoLabel = new JLabel();
-        fastestLapDriverNoField = new JTextField();
-        setLabel(fastestLapDriverNoLabel, "Number of the Fastest Lap Driver", 0,12);
-        setTextField(fastestLapDriverNoField, "Number of the Fastest Lap Driver", 0, 13);
+        fastestLapDriverLabel = new JLabel();
+        List<String> driverNames = dbHandler.getDriverNames();
+        fastestLapDriverComboBox = new JComboBox(driverNames.toArray(new String[driverNames.size()]));
+        setLabel(fastestLapDriverLabel, "Fastest Lap Driver", 0,12);
+        setComboBox(fastestLapDriverComboBox, 0, 13);
 
         fastestLapAverageSpeedLabel = new JLabel();
         fastestLapAverageSpeedField = new JTextField();
@@ -101,7 +104,7 @@ public class AddRaceScreen extends Screen{
         setButton(addRaceButton, "Add Race", "addRace", 0, 20);
     }
 
-    private void setCityComboBox(JComboBox<String> cityComboBox, Integer xCoord, Integer yCoord) {
+    private void setComboBox(JComboBox<String> cityComboBox, Integer xCoord, Integer yCoord) {
         constraints.gridx = xCoord;
         constraints.gridy = yCoord;
         constraints.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -136,7 +139,7 @@ public class AddRaceScreen extends Screen{
                                      (String) cityComboBox.getSelectedItem(), circuitNameField.getText(),
                                      Integer.valueOf(numberOfLapsField.getText()), Integer.valueOf(circuitLengthField.getText()),
                                      Float.valueOf(fastestLapAverageSpeedField.getText()), fastestLapTimeField.getText(),
-                                     Integer.valueOf(fastestLapDriverNoField.getText()));
+                                     (String) fastestLapDriverComboBox.getSelectedItem());
                 this.dispose();
             } catch (ParseException parseException) {
                 parseException.printStackTrace();

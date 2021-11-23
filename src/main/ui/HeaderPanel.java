@@ -26,7 +26,9 @@ public class HeaderPanel extends JPanel implements ActionListener {
     private void setHeaderLabel() {
         headerLabel = new JLabel(header);
         headerLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
-        headerLabel.setBounds(900,25,200,75);
+        Dimension d = this.getToolkit().getScreenSize();
+        Rectangle r = this.getBounds();
+        headerLabel.setBounds((d.width - r.width)/2,25,400,75);
         add(headerLabel);
     }
 
