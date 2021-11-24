@@ -2,6 +2,7 @@ package main.database;
 
 import main.model.Constructor;
 import main.model.Driver;
+import main.model.FastestLap;
 import main.model.Race;
 import main.util.PrintablePreparedStatement;
 
@@ -120,6 +121,31 @@ public class DatabaseConnectionHandler {
 
         return constructors;
     }
+
+    public List<FastestLap> getFastestLapResults() {
+        List<FastestLap> laps = new ArrayList<>();
+
+        try {
+            String query = "SELECT * " +
+                    "FROM FASTESTLAP ";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                FastestLap model = new FastestLap(rs.getFloat("AverageSpeed"), rs.getString("LapTime"), rs.getString("RaceName"), rs.getInt("DriverNumber"));
+
+                laps.add(model);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return laps;
+    }
+
 
 
     public List<Driver> getRaceResult(String name) {

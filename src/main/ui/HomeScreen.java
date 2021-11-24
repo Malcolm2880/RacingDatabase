@@ -53,8 +53,10 @@ public class HomeScreen extends Screen {
                 displayScreen(cScreen);
                 break;
             case "showFastestLaps":
-                // TODO: Add fastest lap screen
+                FastestLapScreen fScreen = new FastestLapScreen();
+                displayScreen(fScreen);
                 break;
+
             case "showOverview":
                 // TODO: Add overview screen
         }

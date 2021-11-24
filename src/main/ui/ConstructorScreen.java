@@ -1,7 +1,6 @@
 package main.ui;
 
 import main.model.Constructor;
-import main.model.Race;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +9,7 @@ import java.util.List;
 
 public class ConstructorScreen extends Screen {
     private TablePanel cResultsTable;
-    private JButton joinConstructorButton;
+    private JButton groupConstructorButton;
 
     public ConstructorScreen() {
         super("Constructor Results");
