@@ -1,6 +1,7 @@
 package main.ui;
 
 import main.model.Driver;
+import main.model.Race;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +14,7 @@ public class RaceScreen extends Screen {
     private JButton updateRaceResultButton;
     private JButton deleteRaceResultButton;
     private JPanel buttonPanel;
+    private HeaderPanel headerPanel;
     private final String raceName;
 
     public RaceScreen(String title) {
@@ -23,8 +25,9 @@ public class RaceScreen extends Screen {
         setLayout(new BorderLayout());
         setResultTable(raceResult);
         setButtons();
-        HeaderPanel headerPanel = new HeaderPanel(title, false);
+        headerPanel = new HeaderPanel(title, false);
         add(headerPanel, BorderLayout.PAGE_START);
+        setUpdateAction();
     }
 
     private void setResultTable(List<Driver> raceResult) {
@@ -87,6 +90,11 @@ public class RaceScreen extends Screen {
         add(buttonPanel, BorderLayout.PAGE_END);
     }
 
+    private void setUpdateAction() {
+        headerPanel.updateButton.addActionListener(this);
+        headerPanel.updateButton.setActionCommand("update");
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -102,6 +110,15 @@ public class RaceScreen extends Screen {
             case "deleteResult":
                 String driverNameToDelete = (String) raceResultTable.data[raceResultTable.table.getSelectedRow()][2];
                 dbHandler.deleteResult(raceName, driverNameToDelete);
+                break;
+            case "update":
+                List<Driver> raceResult = dbHandler.getRaceResult(raceName);
+                remove(raceResultTable);
+                this.revalidate();
+                this.repaint();
+                setResultTable(raceResult);
+                this.revalidate();
+                this.repaint();
                 break;
         }
 

@@ -10,6 +10,7 @@ import java.util.List;
 public class RacesScreen extends Screen {
     private TablePanel raceResultsTable;
     private JButton addRaceButton;
+    private HeaderPanel headerPanel;
 
     public RacesScreen() {
         super("Race Results");
@@ -17,8 +18,9 @@ public class RacesScreen extends Screen {
         setLayout(new BorderLayout());
         setResultsTable(raceResults);
         setAddRaceButton();
-        HeaderPanel panel = new HeaderPanel("Race Results", true);
-        add(panel, BorderLayout.PAGE_START);
+        headerPanel = new HeaderPanel("Race Results", true);
+        setUpdateAction();
+        add(headerPanel, BorderLayout.PAGE_START);
     }
 
     private Object[][] getRaceDataForTable(List<Race> raceResults) {
@@ -53,11 +55,27 @@ public class RacesScreen extends Screen {
         add(addRaceButton, BorderLayout.PAGE_END);
     }
 
+    private void setUpdateAction() {
+        headerPanel.updateButton.addActionListener(this);
+        headerPanel.updateButton.setActionCommand("update");
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("addRace")) {
-            AddRaceScreen addRaceScreen = new AddRaceScreen();
-            addRaceScreen.setVisible(true);
+        switch (e.getActionCommand()) {
+            case "addRace":
+                AddRaceScreen addRaceScreen = new AddRaceScreen();
+                addRaceScreen.setVisible(true);
+                break;
+            case "update":
+                List<Race> raceResults = dbHandler.getRaceResults();
+                remove(raceResultsTable);
+                this.revalidate();
+                this.repaint();
+                setResultsTable(raceResults);
+                this.revalidate();
+                this.repaint();
+                break;
         }
     }
 }

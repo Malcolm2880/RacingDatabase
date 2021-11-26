@@ -63,6 +63,14 @@ public class DatabaseConnectionHandler {
         }
     }
 
+    private void rollbackConnection() {
+        try  {
+            connection.rollback();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+    }
+
     public List<Race> getRaceResults() {
         List<Race> races = new ArrayList<>();
 
@@ -72,12 +80,7 @@ public class DatabaseConnectionHandler {
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                List<Driver> driverResults = getRaceResult(rs.getString("RaceName"));
-
-                Driver winnerDriver = driverResults.stream()
-                        .filter(driver -> driver.getPosition().equals(1))
-                        .findFirst()
-                        .orElse(null);
+                Driver winnerDriver = getHighestRankInRace(rs.getString("RaceName"));
 
                 String winnerDriverName = winnerDriver == null ? "" : winnerDriver.getName();
                 String winnerConstructor = winnerDriver == null ? "" : winnerDriver.getConstructorName();
@@ -156,6 +159,70 @@ public class DatabaseConnectionHandler {
         return result;
     }
 
+    private Driver getHighestRankInRace(String raceName) {
+        Driver result = null;
+        createTempViewForHighestRankDrivers();
+
+        try {
+            @SuppressWarnings("SqlResolve")
+            String query = "SELECT DRIVEPLACESINRACE.RACENAME, DRIVER.DRIVERNAME, DRIVER.DRIVERNUMBER, DRIVER.DRIVERAGE, " +
+                           "DRIVER.CONSTRUCTORNAME, DRIVEPLACESINRACE.RANK "+
+                           "FROM DRIVEPLACESINRACE, TEMP, DRIVER "+
+                           "WHERE TEMP.minRank = DRIVEPLACESINRACE.RANK AND TEMP.raceName = DRIVEPLACESINRACE.RACENAME " +
+                           "AND DRIVEPLACESINRACE.DRIVERNUMBER = DRIVER.DRIVERNUMBER";
+
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                if (rs.getString("RaceName").equals(raceName)) {
+                    String fastestLapDriverName = getFastestLapDriver(rs.getString("RaceName"));
+                    Boolean isFastestLap = rs.getString("DriverName").equals(fastestLapDriverName);
+                    Double racePoints = calculateRacePoints(rs.getInt("Rank"), isFastestLap);
+
+                    Driver model = new Driver(rs.getString("DriverName"), rs.getInt("DriverNumber"),
+                            rs.getInt("DriverAge"), racePoints,rs.getInt("Rank"),
+                            rs.getString("ConstructorName"), isFastestLap);
+                    result = model;
+                }
+            }
+
+            rs.close();
+            ps.close();
+            dropTempView();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return result;
+    }
+
+    private void dropTempView() {
+        try {
+            @SuppressWarnings("SqlResolve")
+            String query = "DROP VIEW TEMP";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+    }
+
+    private void createTempViewForHighestRankDrivers() {
+        try {
+            String query = "CREATE VIEW TEMP(raceName, minRank) AS " +
+                           "SELECT RACENAME, MIN(RANK) as minRank " +
+                           "FROM DRIVEPLACESINRACE " +
+                           "WHERE RANK != 0 " +
+                           "GROUP BY RACENAME HAVING COUNT(*) > 1";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+    }
+
     private Double calculateRacePoints(Integer rank, Boolean isFastestLap) {
         if (rank > 10) {
             return isFastestLap ? 1.0 : 0.0;
@@ -210,14 +277,30 @@ public class DatabaseConnectionHandler {
         return driverName;
     }
 
-    private void rollbackConnection() {
-        try  {
-            connection.rollback();
+    private Integer getDriverRankForRace(String raceName, String driverName) {
+        Integer rank = 0;
+        Integer driverNo = getDriverNumber(driverName);
+
+        try {
+            String query = "SELECT RANK " +
+                           "FROM DRIVEPLACESINRACE "+
+                           "WHERE RACENAME = ?" + " AND DRIVERNUMBER = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setString(1, raceName);
+            ps.setInt(2, driverNo);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                rank = rs.getInt("Rank");
+            }
+
+            rs.close();
+            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
-    }
 
+        return rank;
+    }
 
     public List<String> getRaceCities() {
         List<String> cities = new ArrayList<>();
@@ -369,6 +452,8 @@ public class DatabaseConnectionHandler {
         try {
             Integer driverNo = getDriverNumber(driverName);
             inserDriverToRace(driverNo, raceName);
+            boolean isFastestLap = driverName.equals(getFastestLapDriver(raceName));
+            updateConstructorScore(driverName, rank, isFastestLap);
 
             String query = "INSERT INTO DRIVEPLACESINRACE VALUES (?,?,?)";
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
@@ -424,7 +509,122 @@ public class DatabaseConnectionHandler {
         return driverNo;
     }
 
+    private String getConstructorForDriver(String driverName) {
+        String constructorName = "";
+
+        try {
+            String query = "SELECT DRIVER.CONSTRUCTORNAME FROM DRIVER WHERE DRIVERNAME = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setString(1, driverName);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                constructorName = rs.getString("ConstructorName");
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return constructorName;
+    }
+
+    private Double getConstructorPoints(String constructor) {
+        Double points = 0.0;
+
+        try {
+            String query = "SELECT POINTS FROM CONSTRUCTOR WHERE CONSTRUCTORNAME = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setString(1, constructor);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                points = rs.getDouble("Points");
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return points;
+    }
+
+    private void updateConstructorScore(String driverName, Integer rank, boolean isFastestLap) {
+        String constructor = getConstructorForDriver(driverName);
+        Double points = calculateRacePoints(rank, isFastestLap) + getConstructorPoints(constructor);
+
+        try {
+            String query = "UPDATE CONSTRUCTOR SET POINTS = ? WHERE CONSTRUCTORNAME = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setDouble(1, points);
+            ps.setString(2, constructor);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+    private void updateConstructorScoreForUpdate(String driverName, String raceName, Integer rank, boolean isFastestLap) {
+        String constructor = getConstructorForDriver(driverName);
+        Integer driverExistingRank = getDriverRankForRace(raceName, driverName);
+
+        Double driverExistingPoints = calculateRacePoints(driverExistingRank, isFastestLap);
+        Double newPoints = calculateRacePoints(rank, isFastestLap);
+
+        Double pointDifference = newPoints - driverExistingPoints;
+        Double constructorPoints = getConstructorPoints(constructor);
+
+        try {
+            String query = "UPDATE CONSTRUCTOR SET POINTS = ? WHERE CONSTRUCTORNAME = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setDouble(1, constructorPoints + pointDifference);
+            ps.setString(2, constructor);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+
+    private void updateConstructorScoreForDeletion(String driverName, String raceName, boolean isFastestLap) {
+        String constructor = getConstructorForDriver(driverName);
+        Integer driverExistingRank = getDriverRankForRace(raceName, driverName);
+
+        Double driverExistingPoints = calculateRacePoints(driverExistingRank, isFastestLap);
+        Double constructorPoints = getConstructorPoints(constructor);
+
+        try {
+            String query = "UPDATE CONSTRUCTOR SET POINTS = ? WHERE CONSTRUCTORNAME = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setDouble(1, constructorPoints - driverExistingPoints);
+            ps.setString(2, constructor);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
     public void updateRaceResult(String raceName, String driverName, Integer rank) {
+        boolean isFastestLap = getFastestLapDriver(raceName).equals(driverName);
+        updateConstructorScoreForUpdate(driverName, raceName, rank, isFastestLap);
+
         try {
             Integer driverNo = getDriverNumber(driverName);
 
@@ -443,9 +643,12 @@ public class DatabaseConnectionHandler {
             rollbackConnection();
         }
     }
-    public void deleteResult(String raceName, String driverNameToDelete) {
+
+    public void deleteResult(String raceName, String driverName) {
+        boolean isFastestLap = getFastestLapDriver(raceName).equals(driverName);
+        updateConstructorScoreForDeletion(driverName, raceName, isFastestLap);
         try {
-            Integer driverNo = getDriverNumber(driverNameToDelete);
+            Integer driverNo = getDriverNumber(driverName);
             String query = "DELETE FROM DRIVEPLACESINRACE WHERE RACENAME = ? AND DRIVERNUMBER = ?";
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
             ps.setString(1, raceName);

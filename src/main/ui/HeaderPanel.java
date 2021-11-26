@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 public class HeaderPanel extends JPanel implements ActionListener {
     JLabel headerLabel;
     JButton backButton;
+    JButton updateButton;
     String header;
 
     public HeaderPanel(String header, boolean canGoBack) {
@@ -18,6 +19,8 @@ public class HeaderPanel extends JPanel implements ActionListener {
         if (canGoBack) {
             setBackButton();
         }
+
+        setUpdateButton();
 
         setLayout(new BorderLayout());
         setVisible(true);
@@ -38,6 +41,16 @@ public class HeaderPanel extends JPanel implements ActionListener {
         backButton.addActionListener(this);
         backButton.setActionCommand("goBack");
         add(backButton);
+    }
+
+    private void setUpdateButton() {
+        updateButton = new JButton("Update");
+        Dimension d = this.getToolkit().getScreenSize();
+        Rectangle r = this.getBounds();
+        updateButton.setBounds((d.width - r.width)-100, 25, 100, 50);
+        updateButton.addActionListener(this);
+        updateButton.setActionCommand("update");
+        add(updateButton);
     }
 
     @Override
