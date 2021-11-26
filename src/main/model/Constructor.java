@@ -1,32 +1,30 @@
 package main.model;
 
-import java.util.Date;
-
 public class Constructor {
+
+
+
+
     private final String name;
-
-
-
     private final Integer position;
-    private final float points;
+    private final Float points;
 
-
-    public Constructor(String name, Integer position, float points) {
+    public Constructor(String name, Integer position, Float points) {
         this.name = name;
         this.position = position;
         this.points = points;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Integer getPosition() {
         return position;
     }
 
-    public float getPoints() {
+    public Float getPoints() {
         return points;
-    }
-
-    public String getName() {
-        return name;
     }
 
 }
