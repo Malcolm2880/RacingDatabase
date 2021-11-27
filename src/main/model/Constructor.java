@@ -9,6 +9,7 @@ public class Constructor {
     private final Integer position;
     private final Float points;
 
+
     public Constructor(String name, Integer position, Float points) {
         this.name = name;
         this.position = position;

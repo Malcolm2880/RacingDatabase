@@ -19,7 +19,8 @@ public class ConstructorTablePanel extends TablePanel{
                 if (table.getColumnName(table.columnAtPoint(e.getPoint())).equals("Name")) {
                     int row = table.rowAtPoint(e.getPoint());
                     int col = table.columnAtPoint(e.getPoint());
-                    System.out.println(data[row][col]);
+                    ConstructorSingleScreen sScreen = new ConstructorSingleScreen((String) data[row][col]);
+                    sScreen.setVisible(true);
                 }
             }
         });

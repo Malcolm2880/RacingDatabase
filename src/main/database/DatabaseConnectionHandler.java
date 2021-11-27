@@ -1,9 +1,7 @@
 package main.database;
 
-import main.model.Constructor;
+import main.model.*;
 import main.model.Driver;
-import main.model.FastestLap;
-import main.model.Race;
 import main.util.PrintablePreparedStatement;
 
 import java.sql.*;
@@ -101,12 +99,45 @@ public class DatabaseConnectionHandler {
         return races;
     }
 
+    public List<ConstructorRace> getConstructorRaceResults(String name) {
+        List<ConstructorRace> result = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM DRIVEPLACESINRACE, RACE, DRIVER WHERE DRIVEPLACESINRACE.RACENAME = RACE.RACENAME AND DRIVER.DRIVERNUMBER = DRIVEPLACESINRACE.DRIVERNUMBER AND DRIVER.CONSTRUCTORNAME = ? ";
+
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+
+                String fastestLapDriverName = getFastestLapDriver(rs.getString("DriverName"));
+
+                Boolean isFastestLap = rs.getString("DriverName").equals(fastestLapDriverName);
+
+
+                double points = calculateRacePoints(rs.getInt("Rank"),isFastestLap);
+              ConstructorRace model = new ConstructorRace(rs.getString("RaceName"),rs.getDate("EndDate"),points);
+                result.add(model);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return result;
+    }
+
+
+
+
     public List<Constructor> getConstructorResults() {
         List<Constructor> constructors = new ArrayList<>();
 
         try {
             String query = "SELECT * " +
-                    "FROM CONSTRUCTOR ";
+                    "FROM CONSTRUCTOR ORDER BY POINTS DESC ";
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
             ResultSet rs = ps.executeQuery();
 
