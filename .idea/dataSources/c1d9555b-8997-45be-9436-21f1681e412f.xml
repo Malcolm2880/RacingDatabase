@@ -3983,66 +3983,77 @@
     </user>
     <table id="1322" parent="403" name="CAR">
       <ObjectId>589341</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1323" parent="403" name="CIRCUIT">
       <ObjectId>589345</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1324" parent="403" name="CIRCUITLOCATION">
       <ObjectId>589343</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1325" parent="403" name="CONSTRUCTOR">
       <ObjectId>589337</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1326" parent="403" name="CONSTRUCTORCREATESCAR">
       <ObjectId>589353</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:10</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:10</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1327" parent="403" name="DRIVEPLACESINRACE">
       <ObjectId>589357</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:10</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:10</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1328" parent="403" name="DRIVER">
       <ObjectId>589339</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1329" parent="403" name="DRIVERRACESINCIRCUIT">
       <ObjectId>589355</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:10</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:10</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1330" parent="403" name="FASTESTLAP">
       <ObjectId>589351</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:10</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1331" parent="403" name="RACE">
       <ObjectId>589349</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:10</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="1332" parent="403" name="RACEDATE">
       <ObjectId>589347</ObjectId>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
@@ -53918,6 +53929,7 @@
     <index id="8458" parent="1322" name="SYS_C00614655">
       <ObjectId>589342</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -53960,6 +53972,7 @@ DRIVERNUMBER</ColNames>
     <index id="8464" parent="1323" name="SYS_C00614659">
       <ObjectId>589346</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -53995,6 +54008,7 @@ DRIVERNUMBER</ColNames>
     <index id="8469" parent="1324" name="SYS_C00614657">
       <ObjectId>589344</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -54025,6 +54039,7 @@ DRIVERNUMBER</ColNames>
     <index id="8474" parent="1325" name="SYS_C00614651">
       <ObjectId>589338</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -54057,6 +54072,7 @@ DRIVERNUMBER</ColNames>
     <index id="8479" parent="1326" name="SYS_C00614673">
       <ObjectId>589354</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:10</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:10</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -54111,6 +54127,7 @@ DRIVERNUMBER</ColNames>
     <index id="8486" parent="1327" name="SYS_C00614679">
       <ObjectId>589358</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:10</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:10</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -54170,6 +54187,7 @@ RACENAME</ColNames>
     <index id="8495" parent="1328" name="SYS_C00614653">
       <ObjectId>589340</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -54206,6 +54224,7 @@ RACENAME</ColNames>
     <index id="8500" parent="1329" name="SYS_C00614676">
       <ObjectId>589356</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:10</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:10</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -54262,6 +54281,7 @@ CIRCUITNAME</ColNames>
     <index id="8508" parent="1330" name="SYS_C00614669">
       <ObjectId>589352</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -54322,6 +54342,7 @@ RACENAME</ColNames>
     <index id="8517" parent="1331" name="SYS_C00614664">
       <ObjectId>589350</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
@@ -54376,6 +54397,7 @@ RACENAME</ColNames>
     <index id="8524" parent="1332" name="SYS_C00614661">
       <ObjectId>589348</ObjectId>
       <NameSurrogate>1</NameSurrogate>
+      <Outdated>1</Outdated>
       <CreatedTimestamp>2021-11-21.06:27:09</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-21.06:27:09</ModifiedTimestamp>
       <TablespaceName>USERS</TablespaceName>
