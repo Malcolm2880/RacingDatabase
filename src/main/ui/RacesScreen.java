@@ -68,8 +68,8 @@ public class RacesScreen extends Screen {
 
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
-        buttonPanel.add(addRaceButton, BorderLayout.LINE_START);
         buttonPanel.add(deleteRaceButton, BorderLayout.LINE_END);
+        buttonPanel.add(addRaceButton, BorderLayout.LINE_START);
 
         add(buttonPanel, BorderLayout.PAGE_END);
     }
