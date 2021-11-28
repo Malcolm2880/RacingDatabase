@@ -22,7 +22,8 @@ public class DatabaseConnectionHandler {
     private DatabaseConnectionHandler() {
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-            login("ora_kbarutcu", "a25056623");
+            //"ora_kbarutcu", "a25056623"
+            login("ora_mteesd01", "a10305928");
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
@@ -311,7 +312,7 @@ public class DatabaseConnectionHandler {
         return isFastestLap ? points + 1.0 : points;
     }
 
-    private String getFastestLapDriver(String raceName) {
+    public String getFastestLapDriver(String raceName) {
         String driverName = "";
 
         try {
@@ -721,4 +722,27 @@ public class DatabaseConnectionHandler {
         }
 
     }
+
+    public void deleteRace(String raceName) {
+        //boolean isFastestLap = getFastestLapDriver(raceName).equals(driverName);
+        //updateConstructorScoreForDeletion(driverName, raceName, true);
+        try {
+            //Integer driverNo = getDriverNumber(driverName);
+            String query = "DELETE FROM RACE WHERE RACENAME = ?";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setString(1, raceName);
+
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+    }
+
+
 }
