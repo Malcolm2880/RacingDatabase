@@ -46,7 +46,8 @@ public class HomeScreen extends Screen {
                 displayScreen(racesScreen);
                 break;
             case "showDrivers":
-                // TODO: Add driver screen
+                DriversScreen driversScreen = new DriversScreen();
+                displayScreen(driversScreen);
                 break;
             case "showConstructors":
                 ConstructorScreen cScreen = new ConstructorScreen();

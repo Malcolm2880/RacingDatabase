@@ -86,8 +86,8 @@ public class DatabaseConnectionHandler {
                 String winnerConstructor = winnerDriver == null ? "" : winnerDriver.getConstructorName();
 
                 Race model = new Race(rs.getString("RaceName"), rs.getInt("Laps"),
-                                      rs.getDate("EndDate"), rs.getFloat("FastestLapAverageSpeed"),
-                                      rs.getString("CircuitName"), winnerDriverName, winnerConstructor);
+                        rs.getDate("EndDate"), rs.getFloat("FastestLapAverageSpeed"),
+                        rs.getString("CircuitName"), winnerDriverName, winnerConstructor);
                 races.add(model);
             }
 
@@ -98,6 +98,32 @@ public class DatabaseConnectionHandler {
         }
 
         return races;
+    }
+
+    public List<Driver> getDriverStandings() {
+        List<Driver> drivers = new ArrayList<>();
+
+        try {
+            String query = "SELECT * FROM DRIVER ORDER BY DRIVERPOINTS DESC";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query),
+                    query, false);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                Driver model = new Driver(rs.getString("DriverName"), rs.getInt("DriverNumber"),
+                        rs.getInt("DriverAge"), rs.getDouble("DriverPoints"), 0,
+                        rs.getString("ConstructorName"), false);
+                // TODO: write a query to check if a driver drove a fastest lap - present in fastest lap table?
+                drivers.add(model);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return drivers;
     }
 
     public List<ConstructorRace> getConstructorRaceResults(String name) {
