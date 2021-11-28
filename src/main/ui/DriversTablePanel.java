@@ -21,6 +21,7 @@ public class DriversTablePanel extends TablePanel{
 
                 switch(table.getColumnName(table.columnAtPoint(e.getPoint()))) {
                     case "Name":
+                        System.out.println("here");
                         driverScreen = new DriverScreen(data[row][col+1].toString());
                         driverScreen.setVisible(true);
                         break;
@@ -29,7 +30,8 @@ public class DriversTablePanel extends TablePanel{
                         driverScreen.setVisible(true);
                         break;
                     case "Constructor":
-                        ConstructorScreen constructorScreen = new ConstructorScreen((String) data[row][col]);
+                        ConstructorScreen constructorScreen = new ConstructorScreen(data[row][col].toString());
+                        System.out.println(data[row][col].toString());
                         constructorScreen.setVisible(true);
                         break;
                 }

@@ -10,7 +10,7 @@ import java.util.List;
 public class ConstructorScreen extends Screen {
     private TablePanel cResultsTable;
     private JButton groupConstructorButton;
-//get  race result query
+
     public ConstructorScreen(String title) {
         super(title);
         List<ConstructorRace> constructorResults = dbHandler.getConstructorRaceResults(title);

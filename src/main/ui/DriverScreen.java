@@ -12,26 +12,28 @@ import java.util.List;
 public class DriverScreen extends Screen {
     private TablePanel driverStandingTable;
     private JButton updateDriverStandingButton;
-    //private JPanel buttonPanel;
     private HeaderPanel headerPanel;
     private final int driverNum;
+    private String driverName;
 
     public DriverScreen(String title) {
         super(title);
         this.driverNum =  Integer.parseInt(title);
+        this.driverName = dbHandler.getDriverNameFromNumber(driverNum);
+        setTitle(driverName);
+        System.out.println("here");
 
         List<DriverPlacementInRace> driverStanding = dbHandler.getDriverStanding(driverNum);
         setLayout(new BorderLayout());
         setResultTable(driverStanding);
-        setButtons();
-        headerPanel = new HeaderPanel(title, false);
+        headerPanel = new HeaderPanel(driverName, false);
         add(headerPanel, BorderLayout.PAGE_START);
         setUpdateAction();
     }
 
     private void setResultTable(List<DriverPlacementInRace> driverStanding) {
         Object[][] data = getResultDataForTable(driverStanding);
-        driverStandingTable = new DriverTablePanel(data); //TODO: write this class
+        driverStandingTable = new DriverTablePanel(data);
         add(driverStandingTable, BorderLayout.CENTER);
     }
 
@@ -46,10 +48,6 @@ public class DriverScreen extends Screen {
             data[i++] = obj;
         }
         return data;
-    }
-
-    private void setButtons() {
-        //
     }
 
     private void setUpdateAction() {

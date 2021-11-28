@@ -53,7 +53,6 @@ public class DriversScreen extends Screen {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "update":
-                //TODO: implement update
                 List<Driver> driverStandings = dbHandler.getDriverStandings();
                 remove(driverStandingsTable);
                 this.revalidate();

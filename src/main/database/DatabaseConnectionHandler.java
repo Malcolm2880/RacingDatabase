@@ -501,6 +501,27 @@ public class DatabaseConnectionHandler {
         return names;
     }
 
+    public List<Integer> getDriverNumbers() {
+        List<Integer> numbers = new ArrayList<>();
+
+        try {
+            String query = "SELECT DRIVERNUMBER FROM DRIVER";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                numbers.add(rs.getInt("DriverNumber"));
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return numbers;
+    }
+
     public void insertRace(String raceName, String practiceDate, String raceDate, String city, String circuitName,
                            Integer numOfLaps, Integer circuitLength, Float fastestLapAverageSpeed, String fastestLapTime,
                            String fastestLapDriverName) throws ParseException {
