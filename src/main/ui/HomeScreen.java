@@ -3,7 +3,6 @@ package main.ui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 // Represents a home screen that contains the
 // main menu and buttons to the other screens.
@@ -50,7 +49,7 @@ public class HomeScreen extends Screen {
                 displayScreen(driversScreen);
                 break;
             case "showConstructors":
-                ConstructorScreen cScreen = new ConstructorScreen();
+                ConstructorsScreen cScreen = new ConstructorsScreen();
                 displayScreen(cScreen);
                 break;
             case "showFastestLaps":

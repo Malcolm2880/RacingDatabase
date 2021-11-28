@@ -112,8 +112,7 @@ public class DatabaseConnectionHandler {
             while(rs.next()) {
                 Driver model = new Driver(rs.getString("DriverName"), rs.getInt("DriverNumber"),
                         rs.getInt("DriverAge"), rs.getDouble("DriverPoints"), 0,
-                        rs.getString("ConstructorName"), false);
-                // TODO: write a query to check if a driver drove a fastest lap - present in fastest lap table?
+                        rs.getString("ConstructorName"), driverDroveFastestLapCheck(rs.getInt("DriverNumber")));
                 drivers.add(model);
             }
 
@@ -124,6 +123,27 @@ public class DatabaseConnectionHandler {
         }
 
         return drivers;
+    }
+
+    public boolean driverDroveFastestLapCheck(int driverNumber) {
+        boolean droveFastestLap = false;
+
+        try {
+            String query = "SELECT * FROM FASTESTLAP WHERE DRIVERNUMBER = ?";
+
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setInt(1, driverNumber);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                droveFastestLap = true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return droveFastestLap;
     }
 
     public List<ConstructorRace> getConstructorRaceResults(String name) {
@@ -233,6 +253,59 @@ public class DatabaseConnectionHandler {
                                           rs.getInt("DriverAge"), racePoints,rs.getInt("Rank"),
                                           rs.getString("ConstructorName"), isFastestLap);
                 result.add(model);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return result;
+    }
+
+    // get standings of a driver in each of their races
+    public List<DriverPlacementInRace> getDriverStanding(Integer driverNum) {
+        List<DriverPlacementInRace> result = new ArrayList<>();
+
+        try {
+            String query = "SELECT RACENAME, RANK "+
+                    "FROM DRIVEPLACESINRACE " +
+                    "WHERE DRIVERNUMBER = ? " +
+                    "ORDER BY RANK ASC ";
+
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setInt(1, driverNum);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                DriverPlacementInRace model = new DriverPlacementInRace(driverNum, rs.getString("RACENAME"),
+                        rs.getInt("RANK"));
+                result.add(model);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return result;
+    }
+
+    // get string drivername from num
+    public String getDriverNameFromNumber(Integer driverNum) {
+        String result = new String();
+
+        try {
+            String query = "SELECT DRIVERNAME "+
+                    "FROM DRIVER " +
+                    "WHERE DRIVERNUMBER = ? ";
+
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setInt(1, driverNum);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                result = rs.getString("DRIVERNAME");
             }
 
             rs.close();
@@ -535,7 +608,7 @@ public class DatabaseConnectionHandler {
     public void insertRaceResult(String raceName, String driverName, Integer rank) {
         try {
             Integer driverNo = getDriverNumber(driverName);
-            inserDriverToRace(driverNo, raceName);
+            insertDriverToRace(driverNo, raceName);
             boolean isFastestLap = driverName.equals(getFastestLapDriver(raceName));
             updateConstructorScore(driverName, rank, isFastestLap);
 
@@ -555,7 +628,7 @@ public class DatabaseConnectionHandler {
         }
     }
 
-    private void inserDriverToRace(Integer driverNo, String raceName) {
+    private void insertDriverToRace(Integer driverNo, String raceName) {
         try {
             String query = "INSERT INTO DRIVERRACESINCIRCUIT VALUES (?,?)";
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
