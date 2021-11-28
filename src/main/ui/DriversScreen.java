@@ -17,7 +17,6 @@ public class DriversScreen extends Screen {
         List<Driver> driverStandings = dbHandler.getDriverStandings();
         setLayout(new BorderLayout());
         setStandingsTable(driverStandings);
-        //setAddRaceButton();
         headerPanel = new HeaderPanel("Driver Standings", true);
         setUpdateAction();
         add(headerPanel, BorderLayout.PAGE_START);
@@ -41,18 +40,9 @@ public class DriversScreen extends Screen {
 
     private void setStandingsTable(List<Driver> driverStandings) {
         Object[][] data = getDriverDataForTable(driverStandings);
-        driverStandingsTable = new DriversTablePanel(data); //TODO: make this class
+        driverStandingsTable = new DriversTablePanel(data);
         add(driverStandingsTable, BorderLayout.CENTER);
     }
-
-    /*
-    private void setAddRaceButton() {
-        addRaceButton = new JButton("Add Race");
-        addRaceButton.setPreferredSize(new Dimension(60, 100));
-        addRaceButton.setActionCommand("addRace");
-        addRaceButton.addActionListener(this);
-        add(addRaceButton, BorderLayout.PAGE_END);
-    }*/
 
     private void setUpdateAction() {
         headerPanel.updateButton.addActionListener(this);
@@ -63,6 +53,7 @@ public class DriversScreen extends Screen {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "update":
+                //TODO: implement update
                 List<Driver> driverStandings = dbHandler.getDriverStandings();
                 remove(driverStandingsTable);
                 this.revalidate();

@@ -1,43 +1,42 @@
 package main.ui;
 
 import main.model.Constructor;
-import main.model.ConstructorRace;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-public class ConstructorSingleScreen extends Screen {
+public class ConstructorsScreen extends Screen {
     private TablePanel cResultsTable;
     private JButton groupConstructorButton;
-//get  race result query
-    public ConstructorSingleScreen(String title) {
-        super(title);
-        List<ConstructorRace> constructorResults = dbHandler.getConstructorRaceResults(title);
+
+    public ConstructorsScreen() {
+        super("Constructor Results");
+        List<Constructor> constructorResults = dbHandler.getConstructorResults();
         setLayout(new BorderLayout());
         setResultsTable(constructorResults);
-        HeaderPanel panel = new HeaderPanel(title, true);
+        HeaderPanel panel = new HeaderPanel("Constructor Results", true);
         add(panel, BorderLayout.PAGE_START);
     }
 
-    private Object[][] getCDataForTable(List<ConstructorRace> cResults) {
+    private Object[][] getCDataForTable(List<Constructor> cResults) {
         Object[][] data = new Object[cResults.size()][];
 
         int i = 0;
-        for (ConstructorRace next : cResults) {
+        for (Constructor next : cResults) {
             Object[] obj = new Object[3];
-            obj[0] = next.getGrandPrix();
-            obj[1] = next.getDate();
+            obj[0] = next.getName();
+            obj[1] = next.getPosition();
             obj[2] = next.getPoints();
             data[i++] = obj;
         }
         return data;
     };
 
-    private void setResultsTable(List<ConstructorRace> cResults) {
+    private void setResultsTable(List<Constructor> cResults) {
         Object[][]data = getCDataForTable(cResults);
-        cResultsTable = new ConstructorTablePanel(data);
+        cResultsTable = new ConstructorsTablePanel(data);
         add(cResultsTable, BorderLayout.CENTER);
     }
 

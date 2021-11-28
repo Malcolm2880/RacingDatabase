@@ -3,10 +3,10 @@ package main.ui;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ConstructorTablePanel extends TablePanel {
-    private static final String[] columnNames = {"Grand Prix", "Date", "Points"};
+public class ConstructorsTablePanel extends TablePanel{
+    private static final String[] columnNames = {"Name", "Position", "Points"};
 
-    public ConstructorTablePanel(Object[][] data) {
+    public ConstructorsTablePanel(Object[][] data) {
         super(data, columnNames);
     }
 
@@ -15,13 +15,14 @@ public class ConstructorTablePanel extends TablePanel {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (table.getColumnName(table.columnAtPoint(e.getPoint())).equals("Grand Prix")) {
+                if (table.getColumnName(table.columnAtPoint(e.getPoint())).equals("Name")) {
                     int row = table.rowAtPoint(e.getPoint());
                     int col = table.columnAtPoint(e.getPoint());
-                    RaceScreen raceScreen = new RaceScreen((String) data[row][col]);
-                    raceScreen.setVisible(true);
+                    ConstructorScreen sScreen = new ConstructorScreen((String) data[row][col]);
+                    sScreen.setVisible(true);
                 }
             }
         });
     }
 }
+
