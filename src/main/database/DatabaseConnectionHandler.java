@@ -532,15 +532,26 @@ public class DatabaseConnectionHandler {
         List<Driver> drivers = new ArrayList<>();
 
         try { //R is Driver, S is Race
-            String query = "SELECT * FROM DRIVER " +
-                    "WHERE NOT EXISTS (( SELECT R.RACENAME FROM RACE as R ) " +
-                    "EXCEPT " +
-                    " (SELECT DR.RACENAME FROM RACE X WHERE X.RACENAME = D.DRIVERNAME ) );";
+            String query = "SELECT *" +
+                    "FROM DRIVER d1\n" +
+                    "WHERE NOT EXISTS (\n" +
+                    "        (SELECT DISTINCT r.RACENAME\n" +
+                    "        FROM RACE r)\n" +
+                    "\n" +
+                    "        MINUS\n" +
+                    "\n" +
+                    "        (SELECT dp2.RACENAME\n" +
+                    "         FROM DRIVEPLACESINRACE dp2\n" +
+                    "         WHERE dp2.DRIVERNUMBER = d1.DRIVERNUMBER AND\n" +
+                    "               dp2.RANK < ?))";
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ps.setInt(1, minRank + 1);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                Driver model = new Driver((rs.getString("DriverName"));
+                Driver model = new Driver(rs.getString("DriverName"), rs.getInt("DriverNumber"), rs.getInt("DriverAge"),
+                        rs.getDouble("DriverPoints"), 0, rs.getString("ConstructorName"), false);
+                drivers.add(model);
             }
 
             rs.close();

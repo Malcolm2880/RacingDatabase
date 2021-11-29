@@ -16,40 +16,28 @@ public class FindDriversWithMinimumRank extends Screen {
     private TablePanel results;
 
     public FindDriversWithMinimumRank() {
-        super("Find Drivers With Minimum Score in All Races");
+        super("Find Drivers With Minimum Rank in All Races");
         setExtendedState(JFrame.NORMAL);
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
         setSize(600, 800);
 
-        infoLabel = new JLabel();
-        setLabel(infoLabel, "Enter a score to see the drivers that achieved at least that rank in every race.", 0, 1);
-        minRankInAllRacesField = new JTextField();
-        setTextField(minRankInAllRacesField, "0", 1,1);
+        infoLabel = new JLabel("Enter a rank to see the drivers that achieved at least that rank in every race.");
+        add(infoLabel);
 
-        setButton(resultButton, "See results","seeResults",0,2);
+        minRankInAllRacesField = new JTextField(2);
+        minRankInAllRacesField.setMinimumSize(new Dimension(300, 20));
+        add(minRankInAllRacesField);
 
-        Object[][] data = new Object[1][];
+        resultButton = new JButton("See Results");
+        resultButton.addActionListener(this);
+        resultButton.setActionCommand("seeResults");
+        add(resultButton);
+
+        Object[][] data = new Object[0][];
         results = new DriversTablePanel(data);
         add(results);
     }
 
-    private void setLabel(JLabel label, String labelText, Integer xCoord, Integer yCoord) {
-        label.setText(labelText);
-        label.setPreferredSize(new Dimension(200, 30));
-        constraints.gridx = xCoord;
-        constraints.gridy = yCoord;
-        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-        add(label, constraints);
-    }
-
-    private void setTextField(JTextField textField, String placeholder, Integer xCoord, Integer yCoord) {
-        textField.setText(placeholder);
-        textField.setForeground(Color.gray);
-        textField.setPreferredSize(new Dimension(200, 35));
-        constraints.gridx = xCoord;
-        constraints.gridy = yCoord;
-        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-        add(textField, constraints);
-    }
 
     private Object[][] getResultsDataForTable(List<Driver> resultDrivers) {
         Object[][] data = new Object[resultDrivers.size()][];
@@ -78,6 +66,8 @@ public class FindDriversWithMinimumRank extends Screen {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("seeResults")) {
             remove(results);
+            this.revalidate();
+            this.repaint();
             List<Driver> resultDrivers = dbHandler.getAllDriversWithMinimumRank(Integer.parseInt(minRankInAllRacesField.getText()));
             setResultsTable(resultDrivers);
             this.revalidate();
