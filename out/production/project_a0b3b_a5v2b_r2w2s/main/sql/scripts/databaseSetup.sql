@@ -236,6 +236,17 @@ INSERT INTO RaceDate VALUES ('2021-03-26', '2021-03-28');
 
 INSERT INTO Circuit VALUES ('Bahrain International Circuit', 5412, 'Sakhir');
 
+-- TESTING
+INSERT INTO CIRCUITLOCATION VALUES ('TestCity', 'TestCountry');
+INSERT INTO CIRCUIT VALUES ('TestCircuit', 100, 'TestCity');
+
+INSERT INTO RACEDATE VALUES ('2021-03-11', '2021-03-30');
+INSERT INTO RACE VALUES ('TestRace', 4, '2021-03-30', 200.566, 'TestCircuit');
+
+INSERT INTO FastestLap VALUES (200.566, '02:32:090', 'TestRace', 3);
+
+
+
 INSERT INTO FastestLap VALUES (211.566, '01:32:090', 'Bahrain Grand Prix', 77);
 
 INSERT INTO Race VALUES ('Bahrain Grand Prix', 56, '2021-03-28', 211.566, 'Bahrain International Circuit');

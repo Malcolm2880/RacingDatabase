@@ -2,6 +2,7 @@ package main.ui;
 
 import main.model.Constructor;
 import main.model.Driver;
+import main.model.FastestLap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +12,7 @@ import java.util.List;
 public class OverviewScreen extends Screen {
     private TablePanel podiumDriverTable; //pos, driver, constructor, pts for top 3
     private TablePanel podiumConstructorTable; //pos, name, drivers, pts for top 3
+    private TablePanel fastestSeasonLapTable;
     private JLabel minFastestLap; // fastest fastest lap
     private JButton filterDriversByPoints; //which drivers got over >x points every race? - first divide drivers/races, then condition points
 
@@ -20,18 +22,28 @@ public class OverviewScreen extends Screen {
         super("Overview of the Season 2021");
         List<Driver> driverStandings = dbHandler.getDriverStandings().subList(0, 3);
         List<Constructor> constructorStandings = dbHandler.getConstructorResults().subList(0, 3);
+        FastestLap fastestLapOfSeason = dbHandler.getFastestLapOfSeason();
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         headerPanel = new HeaderPanel("Overview of the Season 2021", true);
         setUpdateAction();
         add(headerPanel);
 
-        add(new JLabel("Driver Podium"), BorderLayout.WEST);
+        JLabel driverPodiumLabel = new JLabel("Driver Podium");
+        driverPodiumLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        add(driverPodiumLabel);
         setPodiumDriverTable(driverStandings);
-        add(new JLabel("Constructor Podium"), BorderLayout.WEST);
+
+        JLabel constructorPodiumLabel = new JLabel("Constructor Podium");
+        constructorPodiumLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        add(constructorPodiumLabel);
         setPodiumConstructorTable(constructorStandings);
 
-        add(new JLabel("Fastest Lap of the Season"), BorderLayout.WEST);
+        JLabel fastestLapLabel = new JLabel("Fastest Lap of the Season");
+        fastestLapLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        add(fastestLapLabel);
+
+        setFastestSeasonLapTable(fastestLapOfSeason);
     }
 
     private Object[][] getDriverDataForTable(List<Driver> driverStandings) {
@@ -62,12 +74,11 @@ public class OverviewScreen extends Screen {
             data[i++] = obj;
         }
         return data;
-    };
+    }
 
     private void setPodiumDriverTable(List<Driver> driverStandings) {
         Object[][] data = getDriverDataForTable(driverStandings);
         podiumDriverTable = new DriversTablePanel(data);
-        podiumDriverTable.setPreferredSize(new Dimension(MAXIMIZED_HORIZ, 140));
         add(podiumDriverTable);
     }
 
@@ -76,6 +87,20 @@ public class OverviewScreen extends Screen {
         podiumConstructorTable = new ConstructorsTablePanel(data);
         add(podiumConstructorTable);
     }
+
+    private void setFastestSeasonLapTable(FastestLap fastestLap) {
+        Object[][] data = new Object[1][];
+        Object[] obj = new Object[4];
+        obj[0] = fastestLap.getAverageSpeed();
+        obj[1] = fastestLap.getLapTime();
+        obj[2] = fastestLap.getRaceName();
+        obj[3] = fastestLap.getDriverNumber();
+        data[0] = obj;
+
+        fastestSeasonLapTable = new FastestLapTablePanel(data);
+        add(fastestSeasonLapTable);
+    }
+
 
     private void setUpdateAction() {
         headerPanel.updateButton.addActionListener(this);

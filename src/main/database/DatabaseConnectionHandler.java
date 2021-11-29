@@ -23,7 +23,7 @@ public class DatabaseConnectionHandler {
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
             //"ora_kbarutcu", "a25056623"
-            login("ora_mteesd01", "a10305928");
+            login("ora_scader1", "a82091455");
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
@@ -432,6 +432,33 @@ public class DatabaseConnectionHandler {
         }
 
         return driverName;
+    }
+
+    public FastestLap getFastestLapOfSeason() {
+        FastestLap result = null;
+
+        try {
+            String query = "SELECT *\n" +
+                    "FROM FASTESTLAP\n" +
+                    "WHERE AVERAGESPEED = (SELECT MAX(SPEED)\n" +
+                    "FROM (SELECT MAX(AVERAGESPEED) AS SPEED, RACENAME\n" +
+                    "    FROM FASTESTLAP\n" +
+                    "  GROUP BY RACENAME))";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                result = new FastestLap(rs.getFloat("AVERAGESPEED"), rs.getString("LAPTIME"),
+                        rs.getString("RACENAME"), rs.getInt("DRIVERNUMBER"));
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result;
     }
 
     private Integer getDriverRankForRace(String raceName, String driverName) {
@@ -863,6 +890,4 @@ public class DatabaseConnectionHandler {
         }
 
     }
-
-
 }
