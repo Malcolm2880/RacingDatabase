@@ -30,20 +30,26 @@ public class OverviewScreen extends Screen {
         add(headerPanel);
 
         JLabel driverPodiumLabel = new JLabel("Driver Podium");
-        driverPodiumLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        driverPodiumLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
         add(driverPodiumLabel);
         setPodiumDriverTable(driverStandings);
 
         JLabel constructorPodiumLabel = new JLabel("Constructor Podium");
-        constructorPodiumLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        constructorPodiumLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
         add(constructorPodiumLabel);
         setPodiumConstructorTable(constructorStandings);
 
         JLabel fastestLapLabel = new JLabel("Fastest Lap of the Season");
-        fastestLapLabel.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        fastestLapLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
         add(fastestLapLabel);
 
         setFastestSeasonLapTable(fastestLapOfSeason);
+
+        filterDriversByPoints = new JButton("Find Drivers With Minimum Score In All Races");
+        filterDriversByPoints.addActionListener(this);
+        filterDriversByPoints.setActionCommand("filterDrivers");
+        filterDriversByPoints.setPreferredSize(new Dimension(80, 120));
+        add(filterDriversByPoints);
     }
 
     private Object[][] getDriverDataForTable(List<Driver> driverStandings) {
@@ -121,6 +127,10 @@ public class OverviewScreen extends Screen {
                 setPodiumConstructorTable(constructorStandings);
                 this.revalidate();
                 this.repaint();
+                break;
+            case "filterDrivers":
+                FindDriversWithMinimumRank findDrivers = new FindDriversWithMinimumRank();
+                findDrivers.setVisible(true);
                 break;
         }
     }

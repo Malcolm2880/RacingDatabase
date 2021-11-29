@@ -42,7 +42,7 @@ public class RacesScreen extends Screen {
             data[i++] = obj;
         }
         return data;
-    };
+    }
 
     private void setResultsTable(List<Race> raceResults) {
         Object[][] data = getRaceDataForTable(raceResults);

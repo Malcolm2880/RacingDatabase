@@ -528,16 +528,19 @@ public class DatabaseConnectionHandler {
         return names;
     }
 
-    public List<Integer> getDriverNumbers() {
-        List<Integer> numbers = new ArrayList<>();
+    public List<Driver> getAllDriversWithMinimumRank(Integer minRank) {
+        List<Driver> drivers = new ArrayList<>();
 
-        try {
-            String query = "SELECT DRIVERNUMBER FROM DRIVER";
+        try { //R is Driver, S is Race
+            String query = "SELECT * FROM DRIVER " +
+                    "WHERE NOT EXISTS (( SELECT R.RACENAME FROM RACE as R ) " +
+                    "EXCEPT " +
+                    " (SELECT DR.RACENAME FROM RACE X WHERE X.RACENAME = D.DRIVERNAME ) );";
             PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                numbers.add(rs.getInt("DriverNumber"));
+                Driver model = new Driver((rs.getString("DriverName"));
             }
 
             rs.close();
@@ -546,7 +549,7 @@ public class DatabaseConnectionHandler {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
 
-        return numbers;
+        return drivers;
     }
 
     public void insertRace(String raceName, String practiceDate, String raceDate, String city, String circuitName,
