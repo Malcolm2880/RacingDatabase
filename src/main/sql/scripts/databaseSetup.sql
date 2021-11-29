@@ -237,13 +237,13 @@ INSERT INTO RaceDate VALUES ('2021-03-26', '2021-03-28');
 INSERT INTO Circuit VALUES ('Bahrain International Circuit', 5412, 'Sakhir');
 
 -- TESTING
-INSERT INTO CIRCUITLOCATION VALUES ('TestCity', 'TestCountry');
-INSERT INTO CIRCUIT VALUES ('TestCircuit', 100, 'TestCity');
+INSERT INTO CIRCUITLOCATION VALUES ('Vancouver', 'Canada');
+INSERT INTO CIRCUIT VALUES ('Vancouver Vracing', 100, 'Vancouver');
 
 INSERT INTO RACEDATE VALUES ('2021-03-11', '2021-03-30');
-INSERT INTO RACE VALUES ('TestRace', 4, '2021-03-30', 200.566, 'TestCircuit');
+INSERT INTO RACE VALUES ('99 Bus Loop', 4, '2021-03-30', 200.566, 'Vancouver Vracing');
 
-INSERT INTO FastestLap VALUES (200.566, '02:32:090', 'TestRace', 3);
+INSERT INTO FastestLap VALUES (200.566, '02:32:090', '99 Bus Loop', 3);
 
 
 

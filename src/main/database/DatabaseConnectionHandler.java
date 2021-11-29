@@ -23,6 +23,7 @@ public class DatabaseConnectionHandler {
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
             //"ora_kbarutcu", "a25056623"
+            //ora_scader1 "a82091455"
             login("ora_scader1", "a82091455");
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
