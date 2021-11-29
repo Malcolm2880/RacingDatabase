@@ -14,6 +14,7 @@ public class OverviewScreen extends Screen {
     private TablePanel podiumConstructorTable; //pos, name, drivers, pts for top 3
     private TablePanel fastestSeasonLapTable;
     private JLabel minFastestLap; // fastest fastest lap
+    private JLabel youngestDriverAgeLabel;
     private JButton filterDriversByPoints; //which drivers got over >x points every race? - first divide drivers/races, then condition points
 
     private HeaderPanel headerPanel;
@@ -29,6 +30,10 @@ public class OverviewScreen extends Screen {
         setUpdateAction();
         add(headerPanel);
 
+        youngestDriverAgeLabel = new JLabel("Youngest Driver Age of the Season: " + dbHandler.getYoungestDriverAge());
+        youngestDriverAgeLabel.setFont(new Font(Font.SERIF, Font.BOLD, 24));
+        add(youngestDriverAgeLabel);
+
         JLabel driverPodiumLabel = new JLabel("Driver Podium");
         driverPodiumLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
         add(driverPodiumLabel);
@@ -42,7 +47,6 @@ public class OverviewScreen extends Screen {
         JLabel fastestLapLabel = new JLabel("Fastest Lap of the Season");
         fastestLapLabel.setFont(new Font(Font.SERIF, Font.BOLD, 12));
         add(fastestLapLabel);
-
         setFastestSeasonLapTable(fastestLapOfSeason);
 
         filterDriversByPoints = new JButton("Find Drivers With Minimum Score In All Races");

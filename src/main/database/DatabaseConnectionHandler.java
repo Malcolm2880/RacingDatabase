@@ -508,6 +508,26 @@ public class DatabaseConnectionHandler {
         return cities;
     }
 
+    public Integer getYoungestDriverAge() {
+        Integer result = 0;
+
+        try {
+            String query = "SELECT MIN(age) AS MinAge FROM (SELECT MIN(DRIVERAGE) AS age FROM DRIVER GROUP BY DRIVERAGE)";
+            PrintablePreparedStatement ps = new PrintablePreparedStatement(connection.prepareStatement(query), query, false);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                result = rs.getInt("MinAge");
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result;
+    }
+
     public List<String> getDriverNames() {
         List<String> names = new ArrayList<>();
 
