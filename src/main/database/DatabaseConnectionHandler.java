@@ -13,7 +13,7 @@ import java.util.List;
  * This class handles all database related transactions
  */
 public class DatabaseConnectionHandler {
-    private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
+    private static final String ORACLE_URL = "omitted";
     private static final String EXCEPTION_TAG = "[EXCEPTION]";
 
     private static DatabaseConnectionHandler instance;
@@ -22,9 +22,7 @@ public class DatabaseConnectionHandler {
     private DatabaseConnectionHandler() {
         try {
             DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
-            //"ora_kbarutcu", "a25056623"
-            //ora_scader1 "a82091455"
-            login("ora_scader1", "a82091455");
+            login("malcolm", "omitted");
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
